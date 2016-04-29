@@ -1,0 +1,43 @@
+package com.victormiranda.mani.core.config;
+
+import com.victormiranda.mani.core.service.user.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
+
+@Configuration
+@EnableWebSecurity
+@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+	@Autowired
+	private  UserDetailsService userService;
+
+	@Override
+	protected void configure(AuthenticationManagerBuilder registry) throws Exception {
+		registry.userDetailsService(userService);
+	}
+
+	@Override
+	public void configure(WebSecurity web) throws Exception {
+		web
+				.ignoring()
+				.antMatchers("/resources/**");
+	}
+
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http
+				.csrf().disable()
+				.authorizeRequests()
+				.antMatchers("/login","/register","/logout", "/sync","/transactions").permitAll()
+				.anyRequest().authenticated();
+	}
+}

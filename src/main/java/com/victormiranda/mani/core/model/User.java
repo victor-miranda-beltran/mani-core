@@ -1,27 +1,21 @@
 package com.victormiranda.mani.core.model;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class User implements UserDetails {
+public class User implements UserDetails  {
 
 	@Id
 	private Integer id;
-
-	private String name;
-
-	private String password;
-
-	@OneToMany(mappedBy = "user")
-	private Set<BankLogin> bankLoginSet;
-
 
 	public Integer getId() {
 		return id;
@@ -30,6 +24,13 @@ public class User implements UserDetails {
 	public void setId(Integer id) {
 		this.id = id;
 	}
+
+	private String name;
+
+	private String password;
+
+	@OneToMany(mappedBy = "user")
+	private Set<BankLogin> bankLoginSet;
 
 	public String getName() {
 		return name;
@@ -53,7 +54,10 @@ public class User implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return null;
+		final Collection<GrantedAuthority> originalRoles = new HashSet<>();
+
+		originalRoles.add(new SimpleGrantedAuthority("user"));
+		return originalRoles;
 	}
 
 	@Override
@@ -85,4 +89,6 @@ public class User implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
+
+
 }

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -68,6 +69,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 
 	private AccountInfo toAccountInfo(final BankAccount bankAccount) {
 		final String id = bankAccount.getName();
+		final String alias = bankAccount.getAlias();
 		final String uuid = bankAccount.getUuid();
 		final BigDecimal availableBalance = bankAccount.getAvailableBalance();
 		final BigDecimal currentBalance = bankAccount.getCurrentBalance();
@@ -76,7 +78,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 		final Set<Transaction> transactions = bankAccount.getTransactions().stream()
 				.map(tm -> toDTOTransaction(tm)).collect(Collectors.toSet());
 
-		return new AccountInfo(id, uuid, availableBalance, currentBalance, lastSynced,transactions);
+		return new AccountInfo(id, alias, uuid, availableBalance, currentBalance, lastSynced,transactions);
 	}
 
 	private BankAccount toBankAccount(final BankLogin bankLogin, final AccountInfo accountInfo) {
@@ -88,13 +90,16 @@ public class BankAccountServiceImpl implements BankAccountService {
 				.map(t -> toDBTransaction(bankAccount, t))
 				.collect(Collectors.toList());
 
-		bankAccount.getTransactions().addAll(transactionModels);
+		if (transactionModels != null && transactionModels.size() > 0) {
+			bankAccount.getTransactions().addAll(transactionModels);
+		}
 
 		return bankAccount;
 	}
 
 	private boolean exists(final BankAccount bankAccount, final Transaction transaction) {
-		return bankAccount.getTransactions().stream()
+		return bankAccount!= null && bankAccount.getTransactions() != null &&
+				bankAccount.getTransactions().stream()
 				.anyMatch(t -> t.getUid() != null && t.getUid().equals(transaction.getTransactionUID()));
 	}
 
@@ -118,7 +123,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 
 	private BankAccount getOrCreate(BankLogin bankLogin, AccountInfo accountInfo) {
 		final User user = userService.getCurrentUser();
-		user.setId(1);
+
 		final BankAccount bankAccount = bankAccountDao.fetchAccount(user.getId(), accountInfo.getId())
 				.orElseGet(() -> createBankAccount(bankLogin, accountInfo));
 
@@ -134,6 +139,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 		bankAccount.setLastSynced(LocalDate.now());
 		bankAccount.setUuid(accountInfo.getUid());
 		bankAccount.setBankLogin(bankLogin);
+		bankAccount.setTransactions(new ArrayList<>());
 
 		return bankAccountDao.save(bankAccount);
 	}

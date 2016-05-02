@@ -34,6 +34,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	public User getCurrentUser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-		return userDao.findByName("victor");
+		return userDao.findByName(auth.getName());
 	}
 }

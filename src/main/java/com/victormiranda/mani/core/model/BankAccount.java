@@ -21,7 +21,7 @@ public class BankAccount {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+	private Integer id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="bank_login_id")
@@ -30,6 +30,7 @@ public class BankAccount {
 	@Transient
 	private String uuid;
 	private String name;
+	private String alias;
 	private BigDecimal availableBalance;
 	private BigDecimal currentBalance;
 	private LocalDate lastSynced;
@@ -37,11 +38,11 @@ public class BankAccount {
 	@OneToMany(mappedBy = "bankAccount")
 	private List<TransactionModel> transactions;
 
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -67,6 +68,14 @@ public class BankAccount {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getAlias() {
+		return alias;
+	}
+
+	public void setAlias(String alias) {
+		this.alias = alias;
 	}
 
 	public BigDecimal getAvailableBalance() {

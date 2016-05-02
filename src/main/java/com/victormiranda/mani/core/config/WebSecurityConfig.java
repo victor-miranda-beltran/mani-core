@@ -1,5 +1,6 @@
 package com.victormiranda.mani.core.config;
 
+import com.victormiranda.mani.core.security.TokenFilter;
 import com.victormiranda.mani.core.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
@@ -10,7 +11,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -19,6 +23,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private  UserDetailsService userService;
+
+	@Autowired
+	private TokenFilter tokenFilter;
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder registry) throws Exception {
@@ -35,9 +42,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				.and()
 				.csrf().disable()
 				.authorizeRequests()
-				.antMatchers("/login","/register","/logout", "/sync","/transactions").permitAll()
-				.anyRequest().authenticated();
+				.antMatchers("/transactions").permitAll()
+				.antMatchers("/rest/authenticate").anonymous()
+				.antMatchers("/rest/protected/hello").hasRole("USER");
+
 	}
 }

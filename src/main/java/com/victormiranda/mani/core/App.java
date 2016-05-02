@@ -20,7 +20,7 @@ public class App {
 		return new WebMvcConfigurerAdapter() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/transactions").allowedOrigins("*");
+				registry.addMapping("/**").allowedOrigins("*").allowedMethods("POST","GET");
 			}
 		};
 	}

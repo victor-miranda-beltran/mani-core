@@ -20,6 +20,7 @@ CREATE TABLE bank_account(
   id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
   bank_login_id INTEGER NOT NULL,
   name VARCHAR(255) NOT NULL,
+  alias VARCHAR(75),
   available_balance DECIMAL(10,2) ,
   current_balance DECIMAL(10,2) ,
   last_synced DATETIME
@@ -34,7 +35,7 @@ CREATE TABLE transaction(
   description_display VARCHAR(255),
   amount DECIMAL(10,2) NOT NULL,
   date DATETIME NOT NULL,
-  flow VARCHAR(3),
+  flow VARCHAR(12),
   status VARCHAR(12)
 );
 

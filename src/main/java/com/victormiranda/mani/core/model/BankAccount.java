@@ -30,6 +30,7 @@ public class BankAccount {
 	@Transient
 	private String uuid;
 	private String name;
+	private String accountNumber;
 	private String alias;
 	private BigDecimal availableBalance;
 	private BigDecimal currentBalance;
@@ -108,5 +109,13 @@ public class BankAccount {
 
 	public void setTransactions(List<TransactionModel> transactions) {
 		this.transactions = transactions;
+	}
+
+	public String getAccountNumber() {
+		return accountNumber;
+	}
+
+	public void setAccountNumber(String accountNumber) {
+		this.accountNumber = accountNumber;
 	}
 }

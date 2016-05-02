@@ -111,6 +111,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 		newTransaction.setDate(t.getDate());
 		newTransaction.setDescriptionOriginal(t.getDescription());
 		newTransaction.setUid(t.getTransactionUID());
+
 		newTransaction.setTransactionStatus(t.getStatus());
 		newTransaction.setFlow(t.getFlow());
 
@@ -124,7 +125,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 	private BankAccount getOrCreate(BankLogin bankLogin, AccountInfo accountInfo) {
 		final User user = userService.getCurrentUser();
 
-		final BankAccount bankAccount = bankAccountDao.fetchAccount(user.getId(), accountInfo.getId())
+		final BankAccount bankAccount = bankAccountDao.fetchAccount(user.getId(), accountInfo.getAccountNumber())
 				.orElseGet(() -> createBankAccount(bankLogin, accountInfo));
 
 		return bankAccount;
@@ -133,7 +134,8 @@ public class BankAccountServiceImpl implements BankAccountService {
 	public BankAccount createBankAccount(final BankLogin bankLogin, final AccountInfo accountInfo) {
 		final BankAccount bankAccount = new BankAccount();
 
-		bankAccount.setName(accountInfo.getId());
+		bankAccount.setName(accountInfo.getName());
+		bankAccount.setAccountNumber(accountInfo.getAccountNumber());
 		bankAccount.setCurrentBalance(accountInfo.getCurrentBalance());
 		bankAccount.setAvailableBalance(accountInfo.getAvailableBalance());
 		bankAccount.setLastSynced(LocalDate.now());

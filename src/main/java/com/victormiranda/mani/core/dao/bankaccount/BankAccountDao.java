@@ -12,8 +12,8 @@ import java.util.Set;
 @Repository
 public interface BankAccountDao extends CrudRepository<BankAccount, Integer> {
 
-	@Query("select b from BankAccount b where b.bankLogin.user.id  = ?1 and b.name = ?2")
-	public Optional<BankAccount> fetchAccount(final Integer userId, final String name);
+	@Query("select b from BankAccount b where b.bankLogin.user.id  = ?1 and b.accountNumber = ?2")
+	public Optional<BankAccount> fetchAccount(final Integer userId, final String accountNumber);
 
 	@Query("select b from BankAccount b where b.bankLogin.user.id  = ?1")
 	public Set<BankAccount> fetchAccounts(final Integer userId);

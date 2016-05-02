@@ -19,6 +19,7 @@ CREATE TABLE bank_login(
 CREATE TABLE bank_account(
   id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
   bank_login_id INTEGER NOT NULL,
+  account_number VARCHAR(4),
   name VARCHAR(255) NOT NULL,
   alias VARCHAR(75),
   available_balance DECIMAL(10,2) ,

@@ -1,7 +1,6 @@
 package com.victormiranda.mani.core.controller;
 
 import com.victormiranda.mani.core.dto.transaction.ProcessedTransaction;
-import com.victormiranda.mani.core.service.bankaccount.BankAccountService;
 import com.victormiranda.mani.core.service.transaction.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;

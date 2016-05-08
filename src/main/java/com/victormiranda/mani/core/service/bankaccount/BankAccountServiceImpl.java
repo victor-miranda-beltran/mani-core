@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -40,13 +39,14 @@ public class BankAccountServiceImpl implements BankAccountService {
 		this.userService = userService;
 	}
 
+	@Override
 	public Credentials getLoginCredentials(final BankLogin bankLogin) {
 		return new PTSBCredentials(bankLogin.getField1(), bankLogin.getField2(), bankLogin.getField3());
 	}
 
 	@Override
 	public void updateBankAccounts(final BankLogin bankLogin, final SynchronizationResult synchronizationResult) {
-		final Set<BankAccount> bankAccounts = synchronizationResult.getAccounts()
+		synchronizationResult.getAccounts()
 				.stream()
 				.map(ai -> toBankAccount(bankLogin, ai))
 				.collect(Collectors.toSet());
@@ -65,6 +65,21 @@ public class BankAccountServiceImpl implements BankAccountService {
 		return bankLogin.getBankAccounts().stream()
 				.map(this::toAccountInfo)
 				.collect(Collectors.toSet());
+	}
+
+	public BankAccount createBankAccount(final BankLogin bankLogin, final AccountInfo accountInfo) {
+		final BankAccount bankAccount = new BankAccount();
+
+		bankAccount.setName(accountInfo.getName());
+		bankAccount.setAccountNumber(accountInfo.getAccountNumber());
+		bankAccount.setCurrentBalance(accountInfo.getCurrentBalance());
+		bankAccount.setAvailableBalance(accountInfo.getAvailableBalance());
+		bankAccount.setLastSynced(LocalDate.now());
+		bankAccount.setUuid(accountInfo.getUid());
+		bankAccount.setBankLogin(bankLogin);
+		bankAccount.setTransactions(new ArrayList<>());
+
+		return bankAccountDao.save(bankAccount);
 	}
 
 	private AccountInfo toAccountInfo(final BankAccount bankAccount) {
@@ -129,20 +144,5 @@ public class BankAccountServiceImpl implements BankAccountService {
 				.orElseGet(() -> createBankAccount(bankLogin, accountInfo));
 
 		return bankAccount;
-	}
-
-	public BankAccount createBankAccount(final BankLogin bankLogin, final AccountInfo accountInfo) {
-		final BankAccount bankAccount = new BankAccount();
-
-		bankAccount.setName(accountInfo.getName());
-		bankAccount.setAccountNumber(accountInfo.getAccountNumber());
-		bankAccount.setCurrentBalance(accountInfo.getCurrentBalance());
-		bankAccount.setAvailableBalance(accountInfo.getAvailableBalance());
-		bankAccount.setLastSynced(LocalDate.now());
-		bankAccount.setUuid(accountInfo.getUid());
-		bankAccount.setBankLogin(bankLogin);
-		bankAccount.setTransactions(new ArrayList<>());
-
-		return bankAccountDao.save(bankAccount);
 	}
 }

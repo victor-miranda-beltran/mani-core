@@ -1,8 +1,8 @@
 package com.victormiranda.mani.core.dto.transaction;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.victormiranda.mani.bean.AccountInfo;
 import com.victormiranda.mani.bean.Transaction;
+import com.victormiranda.mani.bean.category.Category;
 import com.victormiranda.mani.type.TransactionFlow;
 import com.victormiranda.mani.type.TransactionStatus;
 

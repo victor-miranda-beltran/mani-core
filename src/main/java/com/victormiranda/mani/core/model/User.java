@@ -12,10 +12,17 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class User implements UserDetails  {
+public class User implements UserDetails, ManiModel  {
 
 	@Id
 	private Integer id;
+
+	private String name;
+
+	private String password;
+
+	@OneToMany(mappedBy = "user")
+	private Set<BankLogin> bankLoginSet;
 
 	public Integer getId() {
 		return id;
@@ -24,13 +31,6 @@ public class User implements UserDetails  {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
-	private String name;
-
-	private String password;
-
-	@OneToMany(mappedBy = "user")
-	private Set<BankLogin> bankLoginSet;
 
 	public String getName() {
 		return name;

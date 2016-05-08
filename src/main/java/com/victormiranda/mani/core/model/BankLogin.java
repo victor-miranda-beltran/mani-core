@@ -3,22 +3,13 @@ package com.victormiranda.mani.core.model;
 
 import com.victormiranda.mani.type.BankProvider;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "bank_login")
-public class BankLogin {
+public class BankLogin implements ManiModel {
 
 	@Id
 	private Integer id;

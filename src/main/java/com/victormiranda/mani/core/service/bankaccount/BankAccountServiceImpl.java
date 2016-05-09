@@ -100,7 +100,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 		final LocalDate lastSynced = bankAccount.getLastSynced();
 
 		final Set<Transaction> transactions = bankAccount.getTransactions().stream()
-				.map(tm -> toDTOTransaction(tm)).collect(Collectors.toSet());
+				.map(tm -> transactionService.toTransaction(tm)).collect(Collectors.toSet());
 
 		return new AccountInfo(id, accountNumber, uuid, availableBalance, currentBalance, lastSynced,transactions);
 	}
@@ -115,10 +115,6 @@ public class BankAccountServiceImpl implements BankAccountService {
 		}
 
 		return bankAccountDao.save(bankAccount);
-	}
-
-	private Transaction toDTOTransaction(BankTransaction tm) {
-		return new Transaction(tm.getUid(),tm.getDescriptionOriginal(), tm.getDate(), tm.getFlow(), tm.getAmount(), tm.getTransactionStatus());
 	}
 
 	private BankAccount getOrCreate(BankLogin bankLogin, AccountInfo accountInfo) {

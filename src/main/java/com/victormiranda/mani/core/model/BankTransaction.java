@@ -20,6 +20,8 @@ public class BankTransaction implements ManiModel {
 
 	private String descriptionOriginal;
 
+	private String descriptionProcessed;
+
 	private LocalDate date;
 
 	@Enumerated(value = EnumType.STRING)
@@ -58,6 +60,14 @@ public class BankTransaction implements ManiModel {
 
 	public void setDescriptionOriginal(String descriptionOriginal) {
 		this.descriptionOriginal = descriptionOriginal;
+	}
+
+	public String getDescriptionProcessed() {
+		return descriptionProcessed;
+	}
+
+	public void setDescriptionProcessed(String descriptionProcessed) {
+		this.descriptionProcessed = descriptionProcessed;
 	}
 
 	public LocalDate getDate() {

@@ -1,8 +1,9 @@
 package com.victormiranda.mani.core.controller;
 
-import com.victormiranda.mani.core.dto.transaction.ProcessedTransaction;
+import com.victormiranda.mani.bean.Transaction;
 import com.victormiranda.mani.core.service.transaction.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,7 +20,13 @@ public class TransactionController {
 	}
 
 	@RequestMapping("/transactions")
-	public List<ProcessedTransaction> getTransactions() {
+	public List<Transaction> getTransactions() {
 		return transactionService.getTransactions();
+	}
+
+	@RequestMapping("/serial")
+	public String sendTransactions(@RequestBody List<Transaction> transactions){
+
+		return transactions.toString();
 	}
 }

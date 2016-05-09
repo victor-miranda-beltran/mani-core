@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.victormiranda.mani</groupId>
-    <artifactId>core</artifactId>
+    <artifactId>mani-core</artifactId>
     <version>1.0-SNAPSHOT</version>
 
 
@@ -17,6 +17,7 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <docker.image.prefix>mani</docker.image.prefix>
     </properties>
 
 
@@ -100,6 +101,24 @@
 
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.2.3</version>
+                <configuration>
+                    <imageName>${docker.image.prefix}/${project.artifactId}</imageName>
+                    <dockerDirectory>src/main/docker</dockerDirectory>
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <directory>${project.build.directory}</directory>
+                            <include>${project.build.finalName}.jar</include>
+                        </resource>
+                    </resources>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 

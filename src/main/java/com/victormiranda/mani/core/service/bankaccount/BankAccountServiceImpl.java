@@ -9,11 +9,13 @@ import com.victormiranda.mani.core.dao.bankaccount.BankAccountDao;
 import com.victormiranda.mani.core.dao.bankaccount.TransactionDao;
 import com.victormiranda.mani.core.model.BankAccount;
 import com.victormiranda.mani.core.model.BankLogin;
-import com.victormiranda.mani.core.model.TransactionModel;
+import com.victormiranda.mani.core.model.BankTransaction;
 import com.victormiranda.mani.core.model.User;
+import com.victormiranda.mani.core.service.transaction.TransactionService;
 import com.victormiranda.mani.core.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -23,20 +25,21 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class BankAccountServiceImpl implements BankAccountService {
 
 	private final BankAccountDao bankAccountDao;
-	private final TransactionDao transactionDao;
 	private final UserService userService;
+	private final TransactionService transactionService;
 
 	@Autowired
 	public BankAccountServiceImpl(
 			BankAccountDao bankAccountDao,
-			TransactionDao transactionDao,
-			UserService userService) {
+			UserService userService,
+			TransactionService transactionService) {
 		this.bankAccountDao = bankAccountDao;
-		this.transactionDao = transactionDao;
 		this.userService = userService;
+		this.transactionService = transactionService;
 	}
 
 	@Override
@@ -46,15 +49,14 @@ public class BankAccountServiceImpl implements BankAccountService {
 
 	@Override
 	public void updateBankAccounts(final BankLogin bankLogin, final SynchronizationResult synchronizationResult) {
-		synchronizationResult.getAccounts()
-				.stream()
-				.map(ai -> toBankAccount(bankLogin, ai))
-				.collect(Collectors.toSet());
+		for (AccountInfo accountInfo : synchronizationResult.getAccounts()) {
+			toBankAccount(bankLogin, accountInfo);
+		}
 	}
 
 	@Override
 	public Set<AccountInfo> getAccountsInfo() {
-		final User user = userService.getCurrentUser();
+		final User user = userService.getCurrentUser().get();
 		return bankAccountDao.fetchAccounts(user.getId()).stream()
 				.map(this::toAccountInfo)
 				.collect(Collectors.toSet());
@@ -63,6 +65,13 @@ public class BankAccountServiceImpl implements BankAccountService {
 	@Override
 	public Set<AccountInfo> getAccountsInfo(final BankLogin bankLogin) {
 		return bankLogin.getBankAccounts().stream()
+				.map(this::toAccountInfo)
+				.collect(Collectors.toSet());
+	}
+
+	@Override
+	public Set<AccountInfo> getAccountsInfoByUserId(final Integer userId) {
+		return bankAccountDao.fetchAccounts(userId).stream()
 				.map(this::toAccountInfo)
 				.collect(Collectors.toSet());
 	}
@@ -97,48 +106,23 @@ public class BankAccountServiceImpl implements BankAccountService {
 	}
 
 	private BankAccount toBankAccount(final BankLogin bankLogin, final AccountInfo accountInfo) {
-		BankAccount bankAccount = getOrCreate(bankLogin, accountInfo);
+		final BankAccount bankAccount = getOrCreate(bankLogin, accountInfo);
 
-		//process transactions
-		final List<TransactionModel> transactionModels = accountInfo.getTransactions().stream()
-				.filter(t -> !exists(bankAccount, t))
-				.map(t -> toDBTransaction(bankAccount, t))
-				.collect(Collectors.toList());
+		final List<BankTransaction> bankTransactions = transactionService.processTransactions(bankAccount, accountInfo);
 
-		if (transactionModels != null && transactionModels.size() > 0) {
-			bankAccount.getTransactions().addAll(transactionModels);
+		if (bankTransactions != null && bankTransactions.size() > 0) {
+			bankAccount.getTransactions().addAll(bankTransactions);
 		}
 
-		return bankAccount;
+		return bankAccountDao.save(bankAccount);
 	}
 
-	private boolean exists(final BankAccount bankAccount, final Transaction transaction) {
-		return bankAccount!= null && bankAccount.getTransactions() != null &&
-				bankAccount.getTransactions().stream()
-				.anyMatch(t -> t.getUid() != null && t.getUid().equals(transaction.getTransactionUID()));
-	}
-
-	private TransactionModel toDBTransaction(final BankAccount bankAccount, final Transaction t) {
-		final TransactionModel newTransaction = new TransactionModel();
-
-		newTransaction.setBankAccount(bankAccount);
-		newTransaction.setAmount(t.getAmount());
-		newTransaction.setDate(t.getDate());
-		newTransaction.setDescriptionOriginal(t.getDescription());
-		newTransaction.setUid(t.getTransactionUID());
-
-		newTransaction.setTransactionStatus(t.getStatus());
-		newTransaction.setFlow(t.getFlow());
-
-		return transactionDao.save(newTransaction);
-	}
-
-	private Transaction toDTOTransaction(TransactionModel tm) {
+	private Transaction toDTOTransaction(BankTransaction tm) {
 		return new Transaction(tm.getUid(),tm.getDescriptionOriginal(), tm.getDate(), tm.getFlow(), tm.getAmount(), tm.getTransactionStatus());
 	}
 
 	private BankAccount getOrCreate(BankLogin bankLogin, AccountInfo accountInfo) {
-		final User user = userService.getCurrentUser();
+		final User user = userService.getCurrentUser().get();
 
 		final BankAccount bankAccount = bankAccountDao.fetchAccount(user.getId(), accountInfo.getAccountNumber())
 				.orElseGet(() -> createBankAccount(bankLogin, accountInfo));

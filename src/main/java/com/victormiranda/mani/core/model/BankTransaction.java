@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "transaction")
-public class TransactionModel implements ManiModel {
+public class BankTransaction implements ManiModel {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

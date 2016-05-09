@@ -16,4 +16,6 @@ public interface BankAccountService {
 	Set<AccountInfo> getAccountsInfo();
 
 	Set<AccountInfo> getAccountsInfo(BankLogin bankLogin);
+
+	Set<AccountInfo> getAccountsInfoByUserId(Integer userId);
 }

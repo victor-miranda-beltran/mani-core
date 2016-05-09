@@ -49,7 +49,9 @@ public class SynchronizationServiceImpl implements SynchronizationService {
 		final BankLogin bankLogin = bankLoginDao.findOne(bankLoginId);
 
 		final Credentials credentials = bankAccountService.getLoginCredentials(bankLogin);
-		final Set<AccountInfo> accountInfoSet = bankAccountService.getAccountsInfo(bankLogin);
+
+		final Set<AccountInfo> accountInfoSet = bankAccountService.getAccountsInfoByUserId(
+				userService.getCurrentUserId().get());
 
 		final SynchronizationRequest synchronizationRequest =
 				new SynchronizationRequest(credentials, accountInfoSet);

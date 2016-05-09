@@ -28,7 +28,7 @@ public class BankAccount implements ManiModel {
 	private LocalDate lastSynced;
 
 	@OneToMany(mappedBy = "bankAccount")
-	private List<TransactionModel> transactions;
+	private List<BankTransaction> transactions;
 
 	public Integer getId() {
 		return id;
@@ -94,11 +94,11 @@ public class BankAccount implements ManiModel {
 		this.lastSynced = lastSynced;
 	}
 
-	public List<TransactionModel> getTransactions() {
+	public List<BankTransaction> getTransactions() {
 		return transactions;
 	}
 
-	public void setTransactions(List<TransactionModel> transactions) {
+	public void setTransactions(List<BankTransaction> transactions) {
 		this.transactions = transactions;
 	}
 

@@ -18,7 +18,7 @@ public class SynchronizationController {
 
 	@RequestMapping("/sync")
 	public SynchronizationResult sync() {
-		final Integer bankLoginId = 1;
+		final Integer bankLoginId = 2;
 		return synchronizationService.sync(bankLoginId);
 	}
 }

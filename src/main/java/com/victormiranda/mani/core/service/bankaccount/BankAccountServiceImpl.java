@@ -93,6 +93,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 
 	private AccountInfo toAccountInfo(final BankAccount bankAccount) {
 		final String id = bankAccount.getName();
+		final String alias = bankAccount.getAlias();
 		final String accountNumber = bankAccount.getAccountNumber();
 		final String uuid = bankAccount.getUuid();
 		final BigDecimal availableBalance = bankAccount.getAvailableBalance();
@@ -102,7 +103,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 		final Set<Transaction> transactions = bankAccount.getTransactions().stream()
 				.map(tm -> transactionService.toTransaction(tm)).collect(Collectors.toSet());
 
-		return new AccountInfo(id, accountNumber, uuid, availableBalance, currentBalance, lastSynced,transactions);
+		return new AccountInfo(id, accountNumber, alias, uuid, availableBalance, currentBalance, lastSynced,transactions);
 	}
 
 	private BankAccount toBankAccount(final BankLogin bankLogin, final AccountInfo accountInfo) {

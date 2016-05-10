@@ -1,10 +1,7 @@
 package com.victormiranda.mani.core.service.synchronization;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.victormiranda.mani.bean.AccountInfo;
-import com.victormiranda.mani.bean.Credentials;
-import com.victormiranda.mani.bean.SynchronizationRequest;
-import com.victormiranda.mani.bean.SynchronizationResult;
+import com.victormiranda.mani.bean.*;
 import com.victormiranda.mani.core.dao.bankaccount.BankLoginDao;
 import com.victormiranda.mani.core.model.BankLogin;
 import com.victormiranda.mani.core.service.bankaccount.BankAccountService;
@@ -17,7 +14,10 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Service
 public class SynchronizationServiceImpl implements SynchronizationService {

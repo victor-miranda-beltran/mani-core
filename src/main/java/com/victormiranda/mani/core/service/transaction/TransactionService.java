@@ -16,4 +16,6 @@ public interface TransactionService {
 	List <BankTransaction> processTransactions(BankAccount bankAccount, AccountInfo accountInfo);
 
 	Transaction toTransaction(BankTransaction tm);
+
+	List<Transaction> reprocess();
 }

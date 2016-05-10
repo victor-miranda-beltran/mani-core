@@ -5,4 +5,5 @@ import com.victormiranda.mani.bean.SynchronizationResult;
 public interface SynchronizationService {
 
 	SynchronizationResult sync(final Integer bankLoginId);
+
 }

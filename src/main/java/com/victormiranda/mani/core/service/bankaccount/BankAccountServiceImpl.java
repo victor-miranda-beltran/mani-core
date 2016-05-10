@@ -92,18 +92,22 @@ public class BankAccountServiceImpl implements BankAccountService {
 	}
 
 	private AccountInfo toAccountInfo(final BankAccount bankAccount) {
-		final String id = bankAccount.getName();
-		final String alias = bankAccount.getAlias();
-		final String accountNumber = bankAccount.getAccountNumber();
-		final String uuid = bankAccount.getUuid();
-		final BigDecimal availableBalance = bankAccount.getAvailableBalance();
-		final BigDecimal currentBalance = bankAccount.getCurrentBalance();
-		final LocalDate lastSynced = bankAccount.getLastSynced();
 
 		final Set<Transaction> transactions = bankAccount.getTransactions().stream()
 				.map(tm -> transactionService.toTransaction(tm)).collect(Collectors.toSet());
 
-		return new AccountInfo(id, accountNumber, alias, uuid, availableBalance, currentBalance, lastSynced,transactions);
+		final AccountInfo accountInfo = new AccountInfo.Builder()
+				.withName(bankAccount.getName())
+				.withAccountNumber(bankAccount.getAccountNumber())
+				.withUid(bankAccount.getUuid())
+				.withAvailableBalance(bankAccount.getAvailableBalance())
+				.withCurrentBalance(bankAccount.getCurrentBalance())
+				.withLastSynced(bankAccount.getLastSynced())
+				.build();
+
+		accountInfo.getTransactions().addAll(transactions);
+
+		return accountInfo;
 	}
 
 	private BankAccount toBankAccount(final BankLogin bankLogin, final AccountInfo accountInfo) {

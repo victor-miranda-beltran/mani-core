@@ -75,14 +75,15 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public Transaction toTransaction(BankTransaction tm) {
 		final BankAccount bankAccount = tm.getBankAccount();
-		final AccountInfo accountInfo = new AccountInfo(
-				bankAccount.getName(),
-				bankAccount.getAccountNumber(),
-				bankAccount.getUuid(),
-				bankAccount.getAvailableBalance(),
-				bankAccount.getCurrentBalance(),
-				bankAccount.getLastSynced(),
-				new HashSet<>());
+
+		final AccountInfo accountInfo = new AccountInfo.Builder()
+				.withName(bankAccount.getName())
+				.withAccountNumber(bankAccount.getAccountNumber())
+				.withUid(bankAccount.getUuid())
+				.withAvailableBalance(bankAccount.getAvailableBalance())
+				.withCurrentBalance(bankAccount.getCurrentBalance())
+				.withLastSynced(bankAccount.getLastSynced())
+				.build();
 
 		return new Transaction.Builder()
 				.withId(Optional.of(tm.getId()))

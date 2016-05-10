@@ -51,6 +51,7 @@ public class TransactionServiceImpl implements TransactionService {
 		final BankTransaction newTransaction = new BankTransaction();
 		final Transaction t = transactionTransformer.transform(transaction);
 		newTransaction.setBankAccount(bankAccount);
+		newTransaction.setId(t.getId().orElse(null));
 		newTransaction.setAmount(t.getAmount());
 		newTransaction.setDate(t.getDate());
 		newTransaction.setDescriptionOriginal(t.getDescription());
@@ -100,7 +101,7 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public List<Transaction> reprocess() {
 		List<Transaction> transactions = getTransactions().stream()
-				.map(t -> transactionTransformer.transform(t))
+			//	.map(t -> transactionTransformer.transform(t))
 				.collect(Collectors.toList());
 		List<Transaction> reprocessed = new ArrayList<>();
 

@@ -9,7 +9,6 @@ import com.victormiranda.mani.core.service.transaction.TransactionTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -29,6 +28,7 @@ public class PTSBInputTransformer implements TransactionTransformer {
         processingQueue.add(inputCategoryTransformer);
     }
 
+    @Override
     public Transaction transform(final Transaction transaction) {
 
         Transaction transactionModified = transaction;

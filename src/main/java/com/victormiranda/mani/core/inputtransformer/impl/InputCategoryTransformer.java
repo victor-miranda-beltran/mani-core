@@ -17,7 +17,11 @@ public class InputCategoryTransformer implements InputTransformer {
         this.categoryService =  categoryService;
     }
 
+    @Override
     public Transaction transform(final Transaction transaction) {
+        if (categoryService == null) {
+            return transaction;
+        }
 
         return transaction;
     }

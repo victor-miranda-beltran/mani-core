@@ -94,7 +94,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 	private AccountInfo toAccountInfo(final BankAccount bankAccount) {
 
 		final Set<Transaction> transactions = bankAccount.getTransactions().stream()
-				.map(tm -> transactionService.toTransaction(tm)).collect(Collectors.toSet());
+				.map(transactionService::toTransaction).collect(Collectors.toSet());
 
 		final AccountInfo accountInfo = new AccountInfo.Builder()
 				.withName(bankAccount.getName())

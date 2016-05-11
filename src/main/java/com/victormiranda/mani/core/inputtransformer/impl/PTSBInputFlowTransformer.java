@@ -1,18 +1,14 @@
 package com.victormiranda.mani.core.inputtransformer.impl;
 
 
-import com.victormiranda.mani.bean.AccountInfo;
 import com.victormiranda.mani.bean.Transaction;
 import com.victormiranda.mani.core.dao.bankaccount.BankAccountDao;
 import com.victormiranda.mani.core.inputtransformer.InputTransformer;
 import com.victormiranda.mani.core.model.BankAccount;
-import com.victormiranda.mani.core.service.bankaccount.BankAccountService;
-import com.victormiranda.mani.core.service.transaction.TransactionServiceImpl;
 import com.victormiranda.mani.core.service.user.UserService;
 import com.victormiranda.mani.type.TransactionFlow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import sun.misc.Regexp;
 
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -24,9 +20,9 @@ public class PTSBInputFlowTransformer implements InputTransformer {
     private final BankAccountDao bankAccountDao;
     private final UserService userService;
 
-    private final static String TRANSFER_IN = "INET 24 Fr \\d{4}";
-    private final static String TRANSFER_TO = "INET 24 To \\d{4}";
-    private final static Pattern TRANSFER = Pattern.compile("INET 24 (?:Fr|To) (\\d{4})");
+    private static final String TRANSFER_IN = "INET 24 Fr \\d{4}";
+    private static final String TRANSFER_TO = "INET 24 To \\d{4}";
+    private static final Pattern TRANSFER = Pattern.compile("INET 24 (?:Fr|To) (\\d{4})");
 
     @Autowired
     public PTSBInputFlowTransformer(final BankAccountDao bankAccountDao, final UserService userService) {
@@ -34,6 +30,7 @@ public class PTSBInputFlowTransformer implements InputTransformer {
         this.userService = userService;
     }
 
+    @Override
     public Transaction transform(final Transaction transaction) {
         final TransactionFlow calculatedFlow;
         final String modifiedDescription;

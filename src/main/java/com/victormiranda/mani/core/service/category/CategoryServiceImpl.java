@@ -29,7 +29,7 @@ public class CategoryServiceImpl implements CategoryService {
                 : categoryDao.filter(filter);
 
         return categories.stream()
-                .map(tc -> toCategoryBean(tc))
+                .map(this::toCategoryBean)
                 .collect(Collectors.toList());
     }
 

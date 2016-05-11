@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 @Component
@@ -25,6 +24,7 @@ public class PTSBInputDescriptionTransformer implements InputTransformer {
         patterns.add(Pattern.compile("\\d{2}:\\d{2}$"));
     }
 
+    @Override
     public Transaction transform(final Transaction transaction) {
 
         String descriptionProcessed =  transaction.getDescription();

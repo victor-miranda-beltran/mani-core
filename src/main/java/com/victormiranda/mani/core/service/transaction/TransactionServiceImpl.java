@@ -11,12 +11,10 @@ import com.victormiranda.mani.core.model.BankTransaction;
 import com.victormiranda.mani.core.model.TransactionCategory;
 import com.victormiranda.mani.core.service.category.CategoryService;
 import com.victormiranda.mani.core.service.user.UserService;
-import com.victormiranda.mani.type.TransactionFlow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

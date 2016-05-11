@@ -1,7 +1,10 @@
 package com.victormiranda.mani.core.service.synchronization;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.victormiranda.mani.bean.*;
+import com.victormiranda.mani.bean.AccountInfo;
+import com.victormiranda.mani.bean.Credentials;
+import com.victormiranda.mani.bean.SynchronizationRequest;
+import com.victormiranda.mani.bean.SynchronizationResult;
 import com.victormiranda.mani.core.dao.bankaccount.BankLoginDao;
 import com.victormiranda.mani.core.model.BankLogin;
 import com.victormiranda.mani.core.service.bankaccount.BankAccountService;
@@ -12,17 +15,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 @Service
 public class SynchronizationServiceImpl implements SynchronizationService {
 
-	private final ObjectMapper objectMapper;
 	private final String bankScrapperURL;
 	private final RestOperations restTemplate;
 	private final UserService userService;
@@ -31,12 +28,10 @@ public class SynchronizationServiceImpl implements SynchronizationService {
 
 	@Autowired
 	public SynchronizationServiceImpl(
-			final ObjectMapper objectMapper,
 			final @Value("${services.bankscrapper.url}") String bankScrapperURL,
 			final UserService userService,
 			final BankLoginDao bankLoginDao,
 			final BankAccountService bankAccountService) {
-		this.objectMapper = objectMapper;
 		this.bankScrapperURL = bankScrapperURL;
 		this.restTemplate = new RestTemplate();
 		this.userService = userService;

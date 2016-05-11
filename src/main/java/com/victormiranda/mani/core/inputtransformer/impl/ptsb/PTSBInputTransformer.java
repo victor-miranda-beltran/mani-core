@@ -4,7 +4,6 @@ package com.victormiranda.mani.core.inputtransformer.impl.ptsb;
 import com.victormiranda.mani.bean.Transaction;
 import com.victormiranda.mani.core.inputtransformer.InputTransformer;
 import com.victormiranda.mani.core.inputtransformer.impl.InputCategoryTransformer;
-import com.victormiranda.mani.core.inputtransformer.impl.PTSBInputFlowTransformer;
 import com.victormiranda.mani.core.service.transaction.TransactionTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -6,7 +6,6 @@ import com.victormiranda.mani.bean.SynchronizationResult;
 import com.victormiranda.mani.bean.Transaction;
 import com.victormiranda.mani.bean.ptsb.PTSBCredentials;
 import com.victormiranda.mani.core.dao.bankaccount.BankAccountDao;
-import com.victormiranda.mani.core.dao.bankaccount.TransactionDao;
 import com.victormiranda.mani.core.model.BankAccount;
 import com.victormiranda.mani.core.model.BankLogin;
 import com.victormiranda.mani.core.model.BankTransaction;
@@ -17,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;

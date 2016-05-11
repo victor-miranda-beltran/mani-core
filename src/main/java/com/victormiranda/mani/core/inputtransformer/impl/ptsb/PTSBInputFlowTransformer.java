@@ -1,4 +1,4 @@
-package com.victormiranda.mani.core.inputtransformer.impl;
+package com.victormiranda.mani.core.inputtransformer.impl.ptsb;
 
 
 import com.victormiranda.mani.bean.Transaction;

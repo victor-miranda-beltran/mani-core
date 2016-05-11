@@ -97,12 +97,10 @@ public class TransactionServiceImpl implements TransactionService {
 		final BankAccount bankAccount = tm.getBankAccount();
 
 		final AccountInfo accountInfo = new AccountInfo.Builder()
+				.withId(bankAccount.getId())
 				.withName(bankAccount.getName())
+				.withAlias(bankAccount.getAlias())
 				.withAccountNumber(bankAccount.getAccountNumber())
-				.withUid(bankAccount.getUuid())
-				.withAvailableBalance(bankAccount.getAvailableBalance())
-				.withCurrentBalance(bankAccount.getCurrentBalance())
-				.withLastSynced(bankAccount.getLastSynced())
 				.build();
 
 		final Optional<Category> category =

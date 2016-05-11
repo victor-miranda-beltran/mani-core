@@ -24,6 +24,10 @@ public class BankTransaction implements ManiModel {
 
 	private LocalDate date;
 
+	@ManyToOne
+	@JoinColumn(name = "category_id")
+	private TransactionCategory category;
+
 	@Enumerated(value = EnumType.STRING)
 	@Column(name = "flow")
 	private TransactionFlow flow;
@@ -76,6 +80,14 @@ public class BankTransaction implements ManiModel {
 
 	public void setDate(LocalDate date) {
 		this.date = date;
+	}
+
+	public TransactionCategory getCategory() {
+		return category;
+	}
+
+	public void setCategory(TransactionCategory category) {
+		this.category = category;
 	}
 
 	public TransactionFlow getFlow() {

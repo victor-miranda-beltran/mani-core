@@ -8,6 +8,8 @@ import com.victormiranda.mani.core.dao.bankaccount.TransactionDao;
 import com.victormiranda.mani.core.inputtransformer.impl.ptsb.PTSBInputTransformer;
 import com.victormiranda.mani.core.model.BankAccount;
 import com.victormiranda.mani.core.model.BankTransaction;
+import com.victormiranda.mani.core.model.TransactionCategory;
+import com.victormiranda.mani.core.service.category.CategoryService;
 import com.victormiranda.mani.core.service.user.UserService;
 import com.victormiranda.mani.type.TransactionFlow;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +25,15 @@ import java.util.stream.Collectors;
 public class TransactionServiceImpl implements TransactionService {
 
 	private final UserService userService;
+	private final CategoryService categoryService;
 	private final TransactionDao transactionDao;
 	private final BankAccountDao bankAccountDao;
 	private final PTSBInputTransformer transactionTransformer;
 
 	@Autowired
-	public TransactionServiceImpl(UserService userService, TransactionDao transactionDao, BankAccountDao bankAccountDao, PTSBInputTransformer transactionTransformer) {
+	public TransactionServiceImpl(UserService userService, CategoryService categoryService, TransactionDao transactionDao, BankAccountDao bankAccountDao, PTSBInputTransformer transactionTransformer) {
 		this.userService = userService;
+		this.categoryService = categoryService;
 		this.transactionDao = transactionDao;
 		this.bankAccountDao = bankAccountDao;
 		this.transactionTransformer = transactionTransformer;
@@ -42,7 +46,7 @@ public class TransactionServiceImpl implements TransactionService {
 				.collect(Collectors.toList());
 	}
 
-	private Optional<BankTransaction> getTransaction(final BankAccount bankAccount, final Transaction transaction) {
+	private Optional<BankTransaction> getTransaction(final Transaction transaction) {
 		return transactionDao.findByUserAndUID(userService.getCurrentUserId().get(), transaction.getUid());
 	}
 
@@ -67,9 +71,27 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public List<BankTransaction> processTransactions(BankAccount bankAccount, AccountInfo accountInfo) {
 		return accountInfo.getTransactions().stream()
-				.filter(t -> !getTransaction(bankAccount, t).isPresent())
+				.filter(t -> !getTransaction(t).isPresent())
 				.map(t -> processTransaction(bankAccount, t))
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public Transaction updateTransactionCategory(final Integer transactionId, final Category category) {
+
+		final BankTransaction bankTransaction = transactionDao.findOne(transactionId);
+		final Transaction originalTransaction = toTransaction(bankTransaction);
+		final TransactionCategory transactionCategory = new TransactionCategory();
+
+		transactionCategory.setId(category.getId());
+		transactionCategory.setName(category.getName());
+		transactionCategory.setFlow(category.getFlow());
+
+		bankTransaction.setCategory(transactionCategory);
+
+		transactionDao.save(bankTransaction);
+
+		return new Transaction.Builder(originalTransaction).withCategory(Optional.of(category)).build();
 	}
 
 	@Override
@@ -85,10 +107,13 @@ public class TransactionServiceImpl implements TransactionService {
 				.withLastSynced(bankAccount.getLastSynced())
 				.build();
 
+		final Optional<Category> category =
+				Optional.ofNullable(categoryService.fromTransactionCategory(tm.getCategory()));
+
 		return new Transaction.Builder()
 				.withId(Optional.of(tm.getId()))
 				.withAccount(Optional.of(accountInfo))
-				.withCategory(Optional.of(new Category(1, "Groceries", TransactionFlow.OUT, Optional.empty())))
+				.withCategory(category)
 				.withUid(tm.getUid())
 				.withDescription(tm.getDescriptionOriginal())
 				.withDescriptionProcessed(tm.getDescriptionProcessed())

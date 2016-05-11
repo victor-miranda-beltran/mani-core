@@ -1,12 +1,11 @@
 package com.victormiranda.mani.core.controller;
 
 import com.victormiranda.mani.bean.Transaction;
+import com.victormiranda.mani.bean.category.Category;
 import com.victormiranda.mani.core.service.transaction.TransactionService;
 import com.victormiranda.mani.core.service.transaction.TransactionTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,6 +31,11 @@ public class TransactionController {
 	@RequestMapping("/refresh")
 	public List<Transaction> getTransactionsRedo() {
 		return transactionService.reprocess();
+	}
+
+	@RequestMapping(value = "/transactions/{transactionId}/category", method = RequestMethod.PUT)
+	public Transaction updateTransactionCategory(@PathVariable Integer transactionId, @RequestBody Category category) {
+		return transactionService.updateTransactionCategory(transactionId, category);
 	}
 
 

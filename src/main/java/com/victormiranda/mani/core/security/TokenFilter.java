@@ -59,7 +59,7 @@ public class TokenFilter extends GenericFilterBean {
 	}
 
 	private String extractAuthTokenFromRequest(HttpServletRequest httpRequest) {
-		return "temporaryhardcoded";//httpRequest.getHeader(TokenUtils.X_AUTH_TOKEN);
+		return httpRequest.getHeader(TokenUtils.X_AUTH_TOKEN);
 	}
 
 }

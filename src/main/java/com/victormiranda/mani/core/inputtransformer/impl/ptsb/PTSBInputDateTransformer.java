@@ -22,8 +22,6 @@ public class PTSBInputDateTransformer implements InputTransformer {
 
     @Override
     public Transaction transform(Transaction input) {
-        assert (input.getDescription() != null);
-
         final String description = input.getDescription();
         final LocalDate localDateFromDate = input.getDate();
 

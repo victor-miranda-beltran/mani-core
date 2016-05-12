@@ -13,7 +13,6 @@ import com.victormiranda.mani.core.service.category.CategoryService;
 import com.victormiranda.mani.core.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;

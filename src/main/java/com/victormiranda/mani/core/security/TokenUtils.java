@@ -9,11 +9,11 @@ import java.util.Random;
 
 public final class TokenUtils {
 
-	private TokenUtils() {}
-
 	public static final String X_AUTH_TOKEN = "x-auth-token";
 
 	private static final String MAGIC_KEY = "]#[;'/changemetoenvvariable#/[[";
+
+	private TokenUtils() {}
 
 	public static boolean validateToken(final String authToken, final UserDetails user) {
 		final String[] parts = authToken.split(":");
@@ -60,7 +60,7 @@ public final class TokenUtils {
 			final MessageDigest digest = MessageDigest.getInstance("sha");
 			return new String(Hex.encode(digest.digest(plainText.getBytes())));
 		} catch (NoSuchAlgorithmException e) {
-			throw new IllegalStateException("No sha algorithm available");
+			throw new IllegalStateException("No sha algorithm available", e);
 		}
 	}
 

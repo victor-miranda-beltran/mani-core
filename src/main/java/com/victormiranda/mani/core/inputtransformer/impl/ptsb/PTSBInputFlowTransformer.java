@@ -33,7 +33,9 @@ public class PTSBInputFlowTransformer implements InputTransformer {
     @Override
     public Transaction transform(final Transaction transaction) {
         final TransactionFlow calculatedFlow;
+
         final String modifiedDescription;
+        
         final boolean isTransferIn = Pattern.matches(TRANSFER_IN, transaction.getDescription());
         final boolean isTransferOut = Pattern.matches(TRANSFER_TO, transaction.getDescription());
 

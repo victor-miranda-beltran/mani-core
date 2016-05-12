@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,10 +22,12 @@ public class PTSBInputDateTransformer implements InputTransformer {
 
     @Override
     public Transaction transform(Transaction input) {
+        assert (input.getDescription() != null);
+
         final String description = input.getDescription();
         final LocalDate localDateFromDate = input.getDate();
 
-        if (description == null || description.trim().length() == 0) {
+        if (description.trim().length() == 0) {
             return input;
         }
 
@@ -39,8 +42,8 @@ public class PTSBInputDateTransformer implements InputTransformer {
 
         try {
             localDateFromDesc = LocalDate.parse(dateCleanedFromDescription, descriptionFieldDateFormatter);
-        } catch (Exception e) {
-            LOGGER.warn("Date found with value " + dateCleanedFromDescription + ", returning original value");
+        } catch (DateTimeParseException e) {
+            LOGGER.warn("Date found with value " + dateCleanedFromDescription + ", returning original value", e);
             return input;
         }
 

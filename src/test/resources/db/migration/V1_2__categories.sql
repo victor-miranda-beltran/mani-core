@@ -1,0 +1,7 @@
+CREATE TABLE category(
+  id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(75) NOT NULL,
+  user_id INTEGER,
+  flow VARCHAR(12),
+  parent_id INTEGER
+);

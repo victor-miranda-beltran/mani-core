@@ -1,4 +1,4 @@
-package com.victormiranda.mani.core.test.inputtransformer.impl.ptsb;
+package com.victormiranda.mani.core.test.ut.inputtransformer.impl.ptsb;
 
 import com.victormiranda.mani.bean.Transaction;
 import com.victormiranda.mani.core.inputtransformer.impl.ptsb.PTSBInputDateTransformer;

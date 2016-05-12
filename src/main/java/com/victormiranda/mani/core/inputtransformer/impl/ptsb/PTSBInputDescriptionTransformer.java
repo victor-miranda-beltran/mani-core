@@ -19,7 +19,7 @@ public class PTSBInputDescriptionTransformer implements InputTransformer {
 
         patterns.add(Pattern.compile("^POS "));
         patterns.add(Pattern.compile("^CNC "));
-        patterns.add(Pattern.compile("\\d{2}/\\d{2} "));
+        patterns.add(Pattern.compile("\\d{2}/\\d{2}"));
         patterns.add(Pattern.compile(" \\d{1}$"));
         patterns.add(Pattern.compile("\\d{2}:\\d{2}$"));
     }

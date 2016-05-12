@@ -91,9 +91,6 @@ public class BankAccountServiceImpl implements BankAccountService {
 
 	private AccountInfo toAccountInfo(final BankAccount bankAccount) {
 
-		final Set<Transaction> transactions = bankAccount.getTransactions().stream()
-				.map(transactionService::toTransaction).collect(Collectors.toSet());
-
 		final AccountInfo accountInfo = new AccountInfo.Builder()
 				.withName(bankAccount.getName())
 				.withAccountNumber(bankAccount.getAccountNumber())
@@ -103,15 +100,13 @@ public class BankAccountServiceImpl implements BankAccountService {
 				.withLastSynced(bankAccount.getLastSynced())
 				.build();
 
-		accountInfo.getTransactions().addAll(transactions);
-
 		return accountInfo;
 	}
 
 	private BankAccount toBankAccount(final BankLogin bankLogin, final AccountInfo accountInfo) {
 		final BankAccount bankAccount = getOrCreate(bankLogin, accountInfo);
 
-		final List<BankTransaction> bankTransactions = transactionService.processTransactions(bankAccount, accountInfo);
+		final List<BankTransaction> bankTransactions = transactionService.processTransactions(accountInfo);
 
 		if (bankTransactions != null && bankTransactions.size() > 0) {
 			bankAccount.getTransactions().addAll(bankTransactions);

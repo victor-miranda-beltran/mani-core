@@ -13,6 +13,7 @@ import com.victormiranda.mani.core.service.category.CategoryService;
 import com.victormiranda.mani.core.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,8 @@ public class TransactionServiceImpl implements TransactionService {
 	}
 
 	@Override
-	public BankTransaction processTransaction(final BankAccount bankAccount, final Transaction transaction) {
+	public BankTransaction processTransaction(final Transaction transaction) {
+		final BankAccount bankAccount = bankAccountDao.findOne(transaction.getAccount().get().getId());
 		final BankTransaction newTransaction = new BankTransaction();
 		final Transaction t = transactionTransformer.transform(transaction);
 		newTransaction.setBankAccount(bankAccount);
@@ -67,10 +69,10 @@ public class TransactionServiceImpl implements TransactionService {
 	}
 
 	@Override
-	public List<BankTransaction> processTransactions(BankAccount bankAccount, AccountInfo accountInfo) {
+	public List<BankTransaction> processTransactions( AccountInfo accountInfo) {
 		return accountInfo.getTransactions().stream()
 				.filter(t -> !getTransaction(t).isPresent())
-				.map(t -> processTransaction(bankAccount, t))
+				.map(this::processTransaction)
 				.collect(Collectors.toList());
 	}
 
@@ -92,8 +94,7 @@ public class TransactionServiceImpl implements TransactionService {
 		return new Transaction.Builder(originalTransaction).withCategory(Optional.of(category)).build();
 	}
 
-	@Override
-	public Transaction toTransaction(BankTransaction tm) {
+	private Transaction toTransaction(BankTransaction tm) {
 		final BankAccount bankAccount = tm.getBankAccount();
 
 		final AccountInfo accountInfo = new AccountInfo.Builder()
@@ -131,7 +132,7 @@ public class TransactionServiceImpl implements TransactionService {
 			BankAccount bankAccount = bankAccountDao.fetchAccount(
 					userService.getCurrentUserId().get(),
 					transaction.getAccount().get().getAccountNumber()).get();
-			BankTransaction bankTransaction = processTransaction(bankAccount, transaction);
+			BankTransaction bankTransaction = processTransaction(transaction);
 
 			reprocessed.add(toTransaction(bankTransaction));
 		}

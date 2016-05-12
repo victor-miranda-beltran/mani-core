@@ -1,26 +1,19 @@
-package com.victormiranda.mani.core.test.it;
+package com.victormiranda.mani.core.test.it.inputtransformer;
 
 import com.victormiranda.mani.bean.Transaction;
-import com.victormiranda.mani.bean.category.Category;
-import com.victormiranda.mani.core.dao.bankaccount.BankAccountDao;
 import com.victormiranda.mani.core.inputtransformer.impl.ptsb.PTSBInputFlowTransformer;
-import com.victormiranda.mani.core.service.category.CategoryService;
+import com.victormiranda.mani.core.test.it.BaseIT;
+import com.victormiranda.mani.core.test.it.ITApp;
 import com.victormiranda.mani.type.TransactionFlow;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-
-import java.util.List;
-import java.util.Optional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles("test")

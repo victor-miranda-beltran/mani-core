@@ -12,13 +12,11 @@ public interface TransactionService {
 
 	List<Transaction> getTransactions();
 
-	BankTransaction processTransaction(BankAccount bankAccount, Transaction t);
+	BankTransaction processTransaction(Transaction t);
 
-	List <BankTransaction> processTransactions(BankAccount bankAccount, AccountInfo accountInfo);
+	List <BankTransaction> processTransactions(AccountInfo accountInfo);
 
 	Transaction updateTransactionCategory(final Integer transactionId, Category category);
-
-	Transaction toTransaction(BankTransaction tm);
 
 	List<Transaction> reprocess();
 }

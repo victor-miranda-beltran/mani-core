@@ -40,10 +40,7 @@ public class PTSBInputFlowTransformer implements InputTransformer {
         final Optional<BankAccount> destinationAccount =
                 isTransferIn || isTransferOut ? getDestination(transaction) : Optional.empty();
 
-        final boolean isInnerTransaction =
-                (isTransferIn || isTransferOut) && destinationAccount.isPresent();
-
-        if (!isInnerTransaction) {
+        if (!destinationAccount.isPresent()) {
             return transaction;
         } else if (isTransferIn) {
             calculatedFlow = TransactionFlow.INNER_IN;
@@ -62,17 +59,13 @@ public class PTSBInputFlowTransformer implements InputTransformer {
 
     private Optional<BankAccount> getDestination(final Transaction transaction) {
         final Matcher matcher = TRANSFER.matcher(transaction.getDescription());
+        matcher.find();
 
-        if (matcher.find()) {
-            final String destinationAccount = matcher.group(1);
+        final String destinationAccount = matcher.group(1);
 
-            final Integer userId = userService.getCurrentUserId().get();
-            return bankAccountDao.fetchAccounts(userId).stream()
+        final Integer userId = userService.getCurrentUserId().get();
+        return bankAccountDao.fetchAccounts(userId).stream()
                     .filter(a -> destinationAccount.equals(a.getAccountNumber()))
                     .findFirst();
-        } else {
-            return Optional.empty();
-        }
-
     }
 }

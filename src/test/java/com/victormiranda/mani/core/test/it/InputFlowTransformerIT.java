@@ -46,7 +46,7 @@ public class InputFlowTransformerIT extends BaseIT {
     }
 
     @Test
-    public void testFlowInInternalInTransaction() {
+    public void testFlowInInternalOutTransaction() {
         final Transaction transaction = new Transaction.Builder()
                 .withUid("uid")
                 .withDescription("INET 24 To 4321")
@@ -55,6 +55,30 @@ public class InputFlowTransformerIT extends BaseIT {
 
         Transaction transformTransaction = inputFlowTransformer.transform(transaction);
         Assert.assertEquals(transformTransaction.getFlow(), TransactionFlow.INNER_OUT);
+    }
+
+    @Test
+    public void testFlowInInternalInTransaction() {
+        final Transaction transaction = new Transaction.Builder()
+                .withUid("uid")
+                .withDescription("INET 24 Fr 1234")
+                .withFlow(TransactionFlow.IN)
+                .build();
+
+        Transaction transformTransaction = inputFlowTransformer.transform(transaction);
+        Assert.assertEquals(transformTransaction.getFlow(), TransactionFlow.INNER_IN);
+    }
+
+    @Test
+    public void testFlowInExternalInTransaction() {
+        final Transaction transaction = new Transaction.Builder()
+                .withUid("uid")
+                .withDescription("INET 24 Fr 4544")
+                .withFlow(TransactionFlow.IN)
+                .build();
+
+        Transaction transformTransaction = inputFlowTransformer.transform(transaction);
+        Assert.assertEquals(transformTransaction.getFlow(), TransactionFlow.IN);
     }
 
 }

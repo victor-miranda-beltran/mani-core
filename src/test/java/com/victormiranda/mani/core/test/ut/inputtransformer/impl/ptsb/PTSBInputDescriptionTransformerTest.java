@@ -1,5 +1,6 @@
 package com.victormiranda.mani.core.test.ut.inputtransformer.impl.ptsb;
 
+import com.victormiranda.mani.bean.BaseAccountInfo;
 import com.victormiranda.mani.bean.Transaction;
 import com.victormiranda.mani.core.inputtransformer.impl.ptsb.PTSBInputDescriptionTransformer;
 import org.junit.Assert;
@@ -24,6 +25,7 @@ public class PTSBInputDescriptionTransformerTest {
                 .withUid("ozu")
                 .withDate(LocalDate.now())
                 .withDescription("POS CTC")
+                .withAccount(new BaseAccountInfo(1,"demo", "123"))
                 .build();
 
         final Transaction transformedTrans = inputDescriptionTransformer.transform(transaction);
@@ -37,6 +39,7 @@ public class PTSBInputDescriptionTransformerTest {
         final Transaction transaction = new Transaction.Builder()
                 .withUid("ozu")
                 .withDate(LocalDate.now())
+                .withAccount(new BaseAccountInfo(1,"demo", "123"))
                 .withDescription("Transaction with date 19/02")
                 .build();
 

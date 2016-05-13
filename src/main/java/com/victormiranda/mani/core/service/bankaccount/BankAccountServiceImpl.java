@@ -106,7 +106,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 	private BankAccount toBankAccount(final BankLogin bankLogin, final AccountInfo accountInfo) {
 		final BankAccount bankAccount = getOrCreate(bankLogin, accountInfo);
 
-		final List<BankTransaction> bankTransactions = transactionService.processTransactions(accountInfo);
+		final List<BankTransaction> bankTransactions = transactionService.processTransactions(bankAccount.getId(), accountInfo);
 
 		if (bankTransactions != null && bankTransactions.size() > 0) {
 			bankAccount.getTransactions().addAll(bankTransactions);

@@ -27,7 +27,6 @@ import java.util.Random;
 @IntegrationTest("server.port:0")
 public class TransactionServiceImplIT extends BaseIT {
 
-
     @Autowired
     private TransactionServiceImpl transactionService;
 
@@ -37,7 +36,7 @@ public class TransactionServiceImplIT extends BaseIT {
 
         final Transaction transaction = new Transaction.Builder()
                 .withId(Optional.of(new Random().nextInt()))
-                .withAccount(Optional.of(CURRENT_TEST_ACCOUNT))
+                .withAccount(CURRENT_TEST_ACCOUNT)
                 .withDescription("new transact")
                 .withUid("uiid")
                 .withDate(LocalDate.now())
@@ -46,7 +45,7 @@ public class TransactionServiceImplIT extends BaseIT {
 
         final int sizePreInsert = transactionService.getTransactions().size();
 
-        transactionService.processTransaction(transaction);
+        transactionService.processTransaction(CURRENT_TEST_ACCOUNT.getId(), transaction);
 
         final int sizePostInsert = transactionService.getTransactions().size();
 

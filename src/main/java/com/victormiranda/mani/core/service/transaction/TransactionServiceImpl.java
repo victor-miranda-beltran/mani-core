@@ -49,11 +49,10 @@ public class TransactionServiceImpl implements TransactionService {
 	}
 
 	@Override
-	public BankTransaction processTransaction(final Transaction transaction) {
-		final BankAccount bankAccount = bankAccountDao.findOne(transaction.getAccount().get().getId());
+	public BankTransaction processTransaction(final Integer bankAccountId, final Transaction transaction) {
 		final BankTransaction newTransaction = new BankTransaction();
 		final Transaction t = transactionTransformer.transform(transaction);
-		newTransaction.setBankAccount(bankAccount);
+		newTransaction.setBankAccount(bankAccountDao.findOne(bankAccountId));
 		newTransaction.setId(t.getId().orElse(null));
 		newTransaction.setAmount(t.getAmount());
 		newTransaction.setDate(t.getDate());
@@ -68,10 +67,10 @@ public class TransactionServiceImpl implements TransactionService {
 	}
 
 	@Override
-	public List<BankTransaction> processTransactions( AccountInfo accountInfo) {
+	public List<BankTransaction> processTransactions(Integer bankAccountId, AccountInfo accountInfo) {
 		return accountInfo.getTransactions().stream()
 				.filter(t -> !getTransaction(t).isPresent())
-				.map(this::processTransaction)
+				.map(t -> processTransaction(bankAccountId, t) )
 				.collect(Collectors.toList());
 	}
 
@@ -108,7 +107,7 @@ public class TransactionServiceImpl implements TransactionService {
 
 		return new Transaction.Builder()
 				.withId(Optional.of(tm.getId()))
-				.withAccount(Optional.of(accountInfo))
+				.withAccount(accountInfo)
 				.withCategory(category)
 				.withUid(tm.getUid())
 				.withDescription(tm.getDescriptionOriginal())
@@ -123,18 +122,14 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public List<Transaction> reprocess() {
 		List<Transaction> transactions = getTransactions().stream()
-			//	.map(t -> transactionTransformer.transform(t))
 				.collect(Collectors.toList());
-		List<Transaction> reprocessed = new ArrayList<>();
 
-		for(Transaction transaction : transactions) {
-			BankAccount bankAccount = bankAccountDao.fetchAccount(
-					userService.getCurrentUserId().get(),
-					transaction.getAccount().get().getAccountNumber()).get();
-			BankTransaction bankTransaction = processTransaction(transaction);
+		List<Transaction> reprocessed = transactions.stream()
+				.map(transaction -> {
+					return toTransaction(processTransaction(transaction.getAccount().getId(), transaction));
+				})
+				.collect(Collectors.toList());
 
-			reprocessed.add(toTransaction(bankTransaction));
-		}
 		return reprocessed;
 	}
 

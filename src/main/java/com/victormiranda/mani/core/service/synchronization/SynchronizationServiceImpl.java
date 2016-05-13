@@ -1,6 +1,5 @@
 package com.victormiranda.mani.core.service.synchronization;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.victormiranda.mani.bean.AccountInfo;
 import com.victormiranda.mani.bean.Credentials;
 import com.victormiranda.mani.bean.SynchronizationRequest;

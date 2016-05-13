@@ -1,5 +1,6 @@
 package com.victormiranda.mani.core.test.ut.inputtransformer.impl.ptsb;
 
+import com.victormiranda.mani.bean.BaseAccountInfo;
 import com.victormiranda.mani.bean.Transaction;
 import com.victormiranda.mani.core.inputtransformer.impl.ptsb.PTSBInputDateTransformer;
 import org.junit.Assert;
@@ -26,6 +27,7 @@ public class InputDateTransformerTest {
                 .withUid("ozu")
                 .withDate(LocalDate.now())
                 .withDescription("Random")
+                .withAccount(new BaseAccountInfo(1,"demo", "123"))
                 .build();
 
         final Transaction transformedTransaction = inputDateTransformer.transform(transaction);
@@ -40,6 +42,7 @@ public class InputDateTransformerTest {
                 .withUid("ozu")
                 .withDate(LocalDate.now())
                 .withDescription("")
+                .withAccount(new BaseAccountInfo(1,"demo", "123"))
                 .build();
 
         Transaction transformedTransaction = inputDateTransformer.transform(transaction);
@@ -53,6 +56,7 @@ public class InputDateTransformerTest {
         final Transaction transaction = new Transaction.Builder()
                 .withUid("ozu")
                 .withDate(LocalDate.now())
+                .withAccount(new BaseAccountInfo(1,"demo", "123"))
                 .withDescription("Random 19/19")
                 .build();
 
@@ -67,6 +71,7 @@ public class InputDateTransformerTest {
 
         final Transaction transaction = new Transaction.Builder()
                 .withUid("ozu")
+                .withAccount(new BaseAccountInfo(1,"demo", "123"))
                 .withDate(LocalDate.now())
                 .withDescription("Random " + formatter.format(oneMonthAgo))
                 .build();
@@ -84,6 +89,7 @@ public class InputDateTransformerTest {
                 .withUid("ozu")
                 .withDate(LocalDate.now())
                 .withDescription(formatter.format(threeDaysAgo))
+                .withAccount(new BaseAccountInfo(1,"demo", "123"))
                 .build();
 
         final Transaction transformedTransaction = inputDateTransformer.transform(transaction);
@@ -98,6 +104,7 @@ public class InputDateTransformerTest {
         final Transaction transaction = new Transaction.Builder()
                 .withUid("ozu")
                 .withDate(LocalDate.now())
+                .withAccount(new BaseAccountInfo(1,"demo", "123"))
                 .withDescription(formatter.format(threeDaysInTheFuture))
                 .build();
 

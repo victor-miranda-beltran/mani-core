@@ -12,9 +12,9 @@ public interface TransactionService {
 
 	List<Transaction> getTransactions();
 
-	BankTransaction processTransaction(Transaction t);
+	BankTransaction processTransaction(Integer bankAccountId, Transaction t);
 
-	List <BankTransaction> processTransactions(AccountInfo accountInfo);
+	List <BankTransaction> processTransactions(Integer bankAccountId, AccountInfo accountInfo);
 
 	Transaction updateTransactionCategory(final Integer transactionId, Category category);
 

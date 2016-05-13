@@ -12,15 +12,19 @@ import com.victormiranda.mani.core.model.BankTransaction;
 import com.victormiranda.mani.core.model.User;
 import com.victormiranda.mani.core.service.transaction.TransactionService;
 import com.victormiranda.mani.core.service.user.UserService;
+import com.victormiranda.mani.core.util.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -74,10 +78,42 @@ public class BankAccountServiceImpl implements BankAccountService {
 				.collect(Collectors.toSet());
 	}
 
+	@Override
+	public Map<LocalDate, BigDecimal> getAccountBalanceInTime(final AccountInfo accountInfo) {
+		final Map<LocalDate, BigDecimal> evolution = new LinkedHashMap<>();
+		final BankAccount bankAccount = bankAccountDao.findOne(accountInfo.getId());
+
+		List<BankTransaction> transactions = bankAccount.getTransactions();
+
+		final Comparator<BankTransaction> comp = (o1, o2) -> o1.getDate().compareTo(o2.getDate());
+
+		final LocalDate start = transactions.stream().min(comp).get().getDate();
+
+		final LocalDate end = transactions.stream().max(comp).get().getDate();
+
+		BigDecimal balance = transactions.stream().min(comp).get().getBalance();
+
+		for (LocalDate day : DateUtils.getDateRange(start, end)) {
+			Optional<BankTransaction> lastTransactionOfDay = transactions.stream().filter(
+					t -> t.getDate().equals(day)).findFirst();
+
+			if (lastTransactionOfDay.isPresent()) {
+				balance = lastTransactionOfDay.get().getBalance();
+			}
+
+			evolution.put(day, balance);
+
+		}
+
+		return evolution;
+	}
+
 	public BankAccount createBankAccount(final BankLogin bankLogin, final AccountInfo accountInfo) {
 		final BankAccount bankAccount = new BankAccount();
 
 		bankAccount.setName(accountInfo.getName());
+		// by default, alias is the name
+		bankAccount.setAlias(accountInfo.getName());
 		bankAccount.setAccountNumber(accountInfo.getAccountNumber());
 		bankAccount.setCurrentBalance(accountInfo.getCurrentBalance());
 		bankAccount.setAvailableBalance(accountInfo.getAvailableBalance());

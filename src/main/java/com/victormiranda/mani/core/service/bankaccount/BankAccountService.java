@@ -5,6 +5,9 @@ import com.victormiranda.mani.bean.Credentials;
 import com.victormiranda.mani.bean.SynchronizationResult;
 import com.victormiranda.mani.core.model.BankLogin;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Map;
 import java.util.Set;
 
 public interface BankAccountService {
@@ -18,4 +21,6 @@ public interface BankAccountService {
 	Set<AccountInfo> getAccountsInfo(BankLogin bankLogin);
 
 	Set<AccountInfo> getAccountsInfoByUserId(Integer userId);
+
+	Map<LocalDate, BigDecimal> getAccountBalanceInTime(AccountInfo accountInfo);
 }

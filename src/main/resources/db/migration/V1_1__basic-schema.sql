@@ -31,11 +31,14 @@ CREATE TABLE transaction(
   id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
   uid VARCHAR(255) NOT NULL,
   bank_account_id INTEGER NOT NULL,
+  category_id INTEGER,
   description_original VARCHAR(255) NOT NULL,
   description_processed VARCHAR(255),
   description_display VARCHAR(255),
   amount DECIMAL(10,2) NOT NULL,
+  balance DECIMAL(10,2) NOT NULL,
   date DATETIME NOT NULL,
+  date_processed DATETIME NOT NULL,
   flow VARCHAR(12),
   status VARCHAR(12)
 );

@@ -14,7 +14,7 @@ import com.victormiranda.mani.core.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -52,14 +52,16 @@ public class TransactionServiceImpl implements TransactionService {
 	public BankTransaction processTransaction(final Integer bankAccountId, final Transaction transaction) {
 		final BankTransaction newTransaction = new BankTransaction();
 		final Transaction t = transactionTransformer.transform(transaction);
+
 		newTransaction.setBankAccount(bankAccountDao.findOne(bankAccountId));
 		newTransaction.setId(t.getId().orElse(null));
 		newTransaction.setAmount(t.getAmount());
+		newTransaction.setBalance(t.getBalance());
 		newTransaction.setDate(t.getDate());
 		newTransaction.setDescriptionOriginal(t.getDescription());
 		newTransaction.setDescriptionProcessed(t.getDescriptionProcessed());
 		newTransaction.setUid(t.getUid());
-
+		newTransaction.setDateProcessed(LocalDate.now());
 		newTransaction.setTransactionStatus(t.getStatus());
 		newTransaction.setFlow(t.getFlow());
 

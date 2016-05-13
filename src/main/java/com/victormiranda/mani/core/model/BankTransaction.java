@@ -24,6 +24,8 @@ public class BankTransaction implements ManiModel {
 
 	private LocalDate date;
 
+	private LocalDate dateProcessed;
+
 	@ManyToOne
 	@JoinColumn(name = "category_id")
 	private TransactionCategory category;
@@ -41,6 +43,8 @@ public class BankTransaction implements ManiModel {
 	private BankAccount bankAccount;
 
 	private BigDecimal amount;
+
+	private BigDecimal balance;
 
 	public Integer getId() {
 		return id;
@@ -82,6 +86,14 @@ public class BankTransaction implements ManiModel {
 		this.date = date;
 	}
 
+	public LocalDate getDateProcessed() {
+		return dateProcessed;
+	}
+
+	public void setDateProcessed(LocalDate dateProccesed) {
+		this.dateProcessed = dateProccesed;
+	}
+
 	public TransactionCategory getCategory() {
 		return category;
 	}
@@ -112,6 +124,14 @@ public class BankTransaction implements ManiModel {
 
 	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
+	}
+
+	public BigDecimal getBalance() {
+		return balance;
+	}
+
+	public void setBalance(BigDecimal balance) {
+		this.balance = balance;
 	}
 
 	public BankAccount getBankAccount() {

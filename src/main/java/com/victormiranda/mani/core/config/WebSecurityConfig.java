@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -41,8 +42,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and()
+				.addFilterBefore(tokenFilter, BasicAuthenticationFilter.class )
 				.csrf().disable()
 				.authorizeRequests()
+				.anyRequest().authenticated()
 				.antMatchers("/rest/authenticate").anonymous()
 				.antMatchers("/rest/protected/hello").hasRole("USER");
 

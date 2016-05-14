@@ -57,10 +57,20 @@ public class HiControllerIT {
 
         mvc.perform(
             get("/")
-                .header(TokenUtils.X_AUTH_TOKEN,TokenUtils.createToken(user))
+                .header(TokenUtils.X_AUTH_TOKEN, TokenUtils.createToken(user))
             )
             .andExpect(status().isOk())
             .andDo(MockMvcResultHandlers.print());
+
+    }
+
+    @Test
+    public void testHiWithoutToken() throws Exception {
+        mvc.perform(
+                get("/")
+        )
+                .andExpect(status().isForbidden())
+                .andDo(MockMvcResultHandlers.print());
 
     }
 

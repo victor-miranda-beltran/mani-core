@@ -22,7 +22,9 @@ public class BankTransaction implements ManiModel {
 
 	private String descriptionProcessed;
 
-	private LocalDate date;
+	private LocalDate dateAuthorization;
+
+	private LocalDate dateSettled;
 
 	private LocalDate dateProcessed;
 
@@ -78,20 +80,28 @@ public class BankTransaction implements ManiModel {
 		this.descriptionProcessed = descriptionProcessed;
 	}
 
-	public LocalDate getDate() {
-		return date;
+	public LocalDate getDateAuthorization() {
+		return dateAuthorization;
 	}
 
-	public void setDate(LocalDate date) {
-		this.date = date;
+	public void setDateAuthorization(LocalDate date) {
+		this.dateAuthorization = date;
+	}
+
+	public LocalDate getDateSettled() {
+		return dateSettled;
+	}
+
+	public void setDateSettled(LocalDate dateProccesed) {
+		this.dateSettled = dateProccesed;
 	}
 
 	public LocalDate getDateProcessed() {
 		return dateProcessed;
 	}
 
-	public void setDateProcessed(LocalDate dateProccesed) {
-		this.dateProcessed = dateProccesed;
+	public void setDateProcessed(LocalDate dateProcessed) {
+		this.dateProcessed = dateProcessed;
 	}
 
 	public TransactionCategory getCategory() {

@@ -37,8 +37,9 @@ CREATE TABLE transaction(
   description_display VARCHAR(255),
   amount DECIMAL(10,2) NOT NULL,
   balance DECIMAL(10,2) NOT NULL,
-  date DATETIME NOT NULL,
-  dateProcessed DATETIME NOT NULL,
+  date_authorization DATETIME NOT NULL,
+  date_settled DATETIME NOT NULL,
+  date_processed DATETIME NOT NULL,
   flow VARCHAR(12),
   status VARCHAR(12)
 );

@@ -39,7 +39,7 @@ public class TransactionServiceImplIT extends BaseIT {
                 .withAccount(CURRENT_TEST_ACCOUNT)
                 .withDescription("new transact")
                 .withUid("uiid")
-                .withDate(LocalDate.now())
+                .withDateSettled(LocalDate.now())
                 .withAmount(new BigDecimal(100))
                 .build();
 

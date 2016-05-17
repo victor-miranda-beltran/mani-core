@@ -23,7 +23,7 @@ public class PTSBInputDescriptionTransformerTest {
 
         final Transaction transaction = new Transaction.Builder()
                 .withUid("ozu")
-                .withDate(LocalDate.now())
+                .withDateSettled(LocalDate.now())
                 .withDescription("POS CTC")
                 .withAccount(new BaseAccountInfo(1,"demo", "123"))
                 .build();
@@ -38,7 +38,7 @@ public class PTSBInputDescriptionTransformerTest {
 
         final Transaction transaction = new Transaction.Builder()
                 .withUid("ozu")
-                .withDate(LocalDate.now())
+                .withDateSettled(LocalDate.now())
                 .withAccount(new BaseAccountInfo(1,"demo", "123"))
                 .withDescription("Transaction with date 19/02")
                 .build();

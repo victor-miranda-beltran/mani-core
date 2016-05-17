@@ -57,11 +57,12 @@ public class TransactionServiceImpl implements TransactionService {
 		newTransaction.setId(t.getId().orElse(null));
 		newTransaction.setAmount(t.getAmount());
 		newTransaction.setBalance(t.getBalance());
-		newTransaction.setDate(t.getDate());
+		newTransaction.setDateAuthorization(t.getDateAuthorization());
+		newTransaction.setDateSettled(t.getDateSettled());
 		newTransaction.setDescriptionOriginal(t.getDescription());
 		newTransaction.setDescriptionProcessed(t.getDescriptionProcessed());
 		newTransaction.setUid(t.getUid());
-		newTransaction.setDateProcessed(LocalDate.now());
+		newTransaction.setDateSettled(LocalDate.now());
 		newTransaction.setTransactionStatus(t.getStatus());
 		newTransaction.setFlow(t.getFlow());
 
@@ -114,7 +115,8 @@ public class TransactionServiceImpl implements TransactionService {
 				.withUid(tm.getUid())
 				.withDescription(tm.getDescriptionOriginal())
 				.withDescriptionProcessed(tm.getDescriptionProcessed())
-				.withDate(tm.getDate())
+				.withDateAuthorization(tm.getDateAuthorization())
+				.withDateSettled(tm.getDateSettled())
 				.withAmount(tm.getAmount())
 				.withFlow(tm.getFlow())
 				.withStatus(tm.getTransactionStatus())

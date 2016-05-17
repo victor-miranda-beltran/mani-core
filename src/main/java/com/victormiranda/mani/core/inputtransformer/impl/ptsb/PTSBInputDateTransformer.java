@@ -23,7 +23,7 @@ public class PTSBInputDateTransformer implements InputTransformer {
     @Override
     public Transaction transform(Transaction input) {
         final String description = input.getDescription();
-        final LocalDate localDateFromDate = input.getDate();
+        final LocalDate localDateFromDate = input.getDateSettled();
 
         if (description.trim().length() == 0) {
             return input;
@@ -48,7 +48,7 @@ public class PTSBInputDateTransformer implements InputTransformer {
         final long differenceBetweenDates = ChronoUnit.DAYS.between(localDateFromDesc, localDateFromDate);
 
         if (differenceBetweenDates > 0 && differenceBetweenDates < 6) {
-            return new Transaction.Builder(input).withDate(localDateFromDesc).build();
+            return new Transaction.Builder(input).withDateAuthorization(localDateFromDesc).build();
         }
 
         return input;

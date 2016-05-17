@@ -31,6 +31,7 @@ public class InputFlowTransformerIT extends BaseIT {
         final Transaction transaction = new Transaction.Builder()
                 .withUid("uid")
                 .withDescription("ozu")
+                .withAccount(CURRENT_TEST_ACCOUNT)
                 .withFlow(TransactionFlow.OUT)
                 .build();
 
@@ -44,6 +45,7 @@ public class InputFlowTransformerIT extends BaseIT {
                 .withUid("uid")
                 .withDescription("INET 24 To 4321")
                 .withFlow(TransactionFlow.OUT)
+                .withAccount(CURRENT_TEST_ACCOUNT)
                 .build();
 
         Transaction transformTransaction = inputFlowTransformer.transform(transaction);
@@ -55,6 +57,7 @@ public class InputFlowTransformerIT extends BaseIT {
         final Transaction transaction = new Transaction.Builder()
                 .withUid("uid")
                 .withDescription("INET 24 Fr 1234")
+                .withAccount(CURRENT_TEST_ACCOUNT)
                 .withFlow(TransactionFlow.IN)
                 .build();
 
@@ -67,6 +70,7 @@ public class InputFlowTransformerIT extends BaseIT {
         final Transaction transaction = new Transaction.Builder()
                 .withUid("uid")
                 .withDescription("INET 24 Fr 4544")
+                .withAccount(CURRENT_TEST_ACCOUNT)
                 .withFlow(TransactionFlow.IN)
                 .build();
 

@@ -50,6 +50,5 @@ public class TransactionServiceImplIT extends BaseIT {
         final int sizePostInsert = transactionService.getTransactions().size();
 
         Assert.assertEquals(sizePreInsert + 1 , sizePostInsert);
-
     }
 }

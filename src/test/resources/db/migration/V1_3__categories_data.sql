@@ -15,7 +15,7 @@ INSERT INTO category (id, user_id, name, flow, parent_id) VALUES (14, null, 'Man
 INSERT INTO category (id, user_id, name, flow, parent_id) VALUES (15, null, 'Waste mgmt', 'OUT', NULL);
 INSERT INTO category (id, user_id, name, flow, parent_id) VALUES (16, null, 'Groceries', 'OUT', NULL);
 INSERT INTO category (id, user_id, name, flow, parent_id) VALUES (17, null, 'Pharmacy', 'OUT', 35);
-INSERT INTO category (id, user_id, name, flow, parent_id) VALUES (18, null, 'Shopping', 'OUT', 18);
+INSERT INTO category (id, user_id, name, flow, parent_id) VALUES (18, null, 'Shopping', 'OUT', NULL );
 INSERT INTO category (id, user_id, name, flow, parent_id) VALUES (19, null, 'Electronics', 'OUT', 18);
 INSERT INTO category (id, user_id, name, flow, parent_id) VALUES (20, null, 'Clothes', 'OUT', 18);
 INSERT INTO category (id, user_id, name, flow, parent_id) VALUES (21, null, 'Home equipment', 'OUT', NULL);
@@ -35,3 +35,4 @@ INSERT INTO category (id, user_id, name, flow, parent_id) VALUES (35, null, 'Bea
 INSERT INTO category (id, user_id, name, flow, parent_id) VALUES (36, null, 'Health', 'OUT', NULL);
 INSERT INTO category (id, user_id, name, flow, parent_id) VALUES (37, null, 'GP', 'OUT', 36);
 INSERT INTO category (id, user_id, name, flow, parent_id) VALUES (38, null, 'Veterinary', 'OUT', 36);
+INSERT INTO category (id, user_id, name, flow, parent_id) VALUES (39, null, 'TV/Video subscriptions', 'OUT', NULL);

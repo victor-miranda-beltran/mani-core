@@ -11,6 +11,7 @@ import com.victormiranda.mani.core.model.BankTransaction;
 import com.victormiranda.mani.core.model.TransactionCategory;
 import com.victormiranda.mani.core.service.category.CategoryService;
 import com.victormiranda.mani.core.service.user.UserService;
+import com.victormiranda.mani.type.TransactionStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +45,13 @@ public class TransactionServiceImpl implements TransactionService {
 				.collect(Collectors.toList());
 	}
 
+	@Override
+	public List<Transaction> getPendingTransactionsFromBankAccount(final Integer bankAccountId) {
+		return transactionDao.getPendingBankTransactionsByAccount(bankAccountId).stream()
+				.map(this::toTransaction)
+				.collect(Collectors.toList());
+	}
+
 	private Optional<BankTransaction> getTransaction(final Transaction transaction) {
 		return transactionDao.findByUserAndUID(userService.getCurrentUserId().get(), transaction.getUid());
 	}
@@ -70,8 +78,16 @@ public class TransactionServiceImpl implements TransactionService {
 	}
 
 	@Override
-	public List<BankTransaction> processTransactions(Integer bankAccountId, AccountInfo accountInfo) {
+	public List<BankTransaction> processPendingTransactions(Integer bankAccountId, List<Transaction> newPendings) {
+		return newPendings.stream()
+				.map(t -> processTransaction(bankAccountId, t) )
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<BankTransaction> processSettledTransactions(Integer bankAccountId, AccountInfo accountInfo) {
 		return accountInfo.getTransactions().stream()
+				.filter(t -> TransactionStatus.NORMAL == t.getStatus())
 				.filter(t -> !getTransaction(t).isPresent())
 				.map(t -> processTransaction(bankAccountId, t) )
 				.collect(Collectors.toList());

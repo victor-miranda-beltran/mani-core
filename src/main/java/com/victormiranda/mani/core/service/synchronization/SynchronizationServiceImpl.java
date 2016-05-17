@@ -53,7 +53,7 @@ public class SynchronizationServiceImpl implements SynchronizationService {
 		final SynchronizationResult synchronizationResult =
 				restTemplate.postForObject(bankScrapperURL + "/scrape",synchronizationRequest, SynchronizationResult.class);
 
-		bankAccountService.updateBankAccounts(bankLogin, synchronizationResult);
+		bankAccountService.syncBankAccounts(bankLogin, synchronizationResult);
 
 		return synchronizationResult;
 	}

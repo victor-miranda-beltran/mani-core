@@ -40,7 +40,7 @@ public class BankTransaction implements ManiModel {
 	@Column(name = "status")
 	private TransactionStatus transactionStatus;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "bank_account_id")
 	private BankAccount bankAccount;
 

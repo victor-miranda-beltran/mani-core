@@ -25,14 +25,14 @@ public class InputDateTransformerTest {
 
         final Transaction transaction = new Transaction.Builder()
                 .withUid("ozu")
-                .withDate(LocalDate.now())
+                .withDateSettled(LocalDate.now())
                 .withDescription("Random")
                 .withAccount(new BaseAccountInfo(1,"demo", "123"))
                 .build();
 
         final Transaction transformedTransaction = inputDateTransformer.transform(transaction);
 
-        Assert.assertEquals(transformedTransaction.getDate(), LocalDate.now());
+        Assert.assertEquals(transformedTransaction.getDateAuthorization(), LocalDate.now());
     }
 
     @Test
@@ -40,14 +40,14 @@ public class InputDateTransformerTest {
 
         final Transaction transaction = new Transaction.Builder()
                 .withUid("ozu")
-                .withDate(LocalDate.now())
+                .withDateSettled(LocalDate.now())
                 .withDescription("")
                 .withAccount(new BaseAccountInfo(1,"demo", "123"))
                 .build();
 
         Transaction transformedTransaction = inputDateTransformer.transform(transaction);
 
-        Assert.assertEquals(transformedTransaction.getDate(), LocalDate.now());
+        Assert.assertEquals(transformedTransaction.getDateAuthorization(), LocalDate.now());
     }
 
     @Test
@@ -55,14 +55,14 @@ public class InputDateTransformerTest {
 
         final Transaction transaction = new Transaction.Builder()
                 .withUid("ozu")
-                .withDate(LocalDate.now())
+                .withDateSettled(LocalDate.now())
                 .withAccount(new BaseAccountInfo(1,"demo", "123"))
                 .withDescription("Random 19/19")
                 .build();
 
         final Transaction transformedTransaction = inputDateTransformer.transform(transaction);
 
-        Assert.assertEquals(transformedTransaction.getDate(), LocalDate.now());
+        Assert.assertEquals(transformedTransaction.getDateAuthorization(), LocalDate.now());
     }
 
     @Test
@@ -72,13 +72,13 @@ public class InputDateTransformerTest {
         final Transaction transaction = new Transaction.Builder()
                 .withUid("ozu")
                 .withAccount(new BaseAccountInfo(1,"demo", "123"))
-                .withDate(LocalDate.now())
+                .withDateSettled(LocalDate.now())
                 .withDescription("Random " + formatter.format(oneMonthAgo))
                 .build();
 
         final Transaction transformedTransaction = inputDateTransformer.transform(transaction);
 
-        Assert.assertEquals(transformedTransaction.getDate(), LocalDate.now());
+        Assert.assertEquals(transformedTransaction.getDateAuthorization(), LocalDate.now());
     }
 
     @Test
@@ -87,14 +87,14 @@ public class InputDateTransformerTest {
 
         final Transaction transaction = new Transaction.Builder()
                 .withUid("ozu")
-                .withDate(LocalDate.now())
+                .withDateSettled(LocalDate.now())
                 .withDescription(formatter.format(threeDaysAgo))
                 .withAccount(new BaseAccountInfo(1,"demo", "123"))
                 .build();
 
         final Transaction transformedTransaction = inputDateTransformer.transform(transaction);
 
-        Assert.assertEquals(transformedTransaction.getDate(), threeDaysAgo);
+        Assert.assertEquals(transformedTransaction.getDateAuthorization(), threeDaysAgo);
     }
 
     @Test
@@ -103,13 +103,13 @@ public class InputDateTransformerTest {
 
         final Transaction transaction = new Transaction.Builder()
                 .withUid("ozu")
-                .withDate(LocalDate.now())
+                .withDateSettled(LocalDate.now())
                 .withAccount(new BaseAccountInfo(1,"demo", "123"))
                 .withDescription(formatter.format(threeDaysInTheFuture))
                 .build();
 
         Transaction transformedTransaction = inputDateTransformer.transform(transaction);
 
-        Assert.assertEquals(transformedTransaction.getDate(), LocalDate.now());
+        Assert.assertEquals(transformedTransaction.getDateAuthorization(), LocalDate.now());
     }
 }

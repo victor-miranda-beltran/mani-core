@@ -3,7 +3,6 @@ package com.victormiranda.mani.core.service.bankaccount;
 import com.victormiranda.mani.bean.AccountInfo;
 import com.victormiranda.mani.bean.Credentials;
 import com.victormiranda.mani.bean.SynchronizationResult;
-import com.victormiranda.mani.bean.Transaction;
 import com.victormiranda.mani.bean.ptsb.PTSBCredentials;
 import com.victormiranda.mani.core.dao.bankaccount.BankAccountDao;
 import com.victormiranda.mani.core.model.BankAccount;
@@ -14,17 +13,13 @@ import com.victormiranda.mani.core.service.transaction.TransactionService;
 import com.victormiranda.mani.core.service.user.UserService;
 import com.victormiranda.mani.core.util.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -85,17 +80,17 @@ public class BankAccountServiceImpl implements BankAccountService {
 
 		List<BankTransaction> transactions = bankAccount.getTransactions();
 
-		final Comparator<BankTransaction> comp = (o1, o2) -> o1.getDate().compareTo(o2.getDate());
+		final Comparator<BankTransaction> comp = (o1, o2) -> o1.getDateAuthorization().compareTo(o2.getDateAuthorization());
 
-		final LocalDate start = transactions.stream().min(comp).get().getDate();
+		final LocalDate start = transactions.stream().min(comp).get().getDateAuthorization();
 
-		final LocalDate end = transactions.stream().max(comp).get().getDate();
+		final LocalDate end = transactions.stream().max(comp).get().getDateAuthorization();
 
 		BigDecimal balance = transactions.stream().min(comp).get().getBalance();
 
 		for (LocalDate day : DateUtils.getDateRange(start, end)) {
 			Optional<BankTransaction> lastTransactionOfDay = transactions.stream().filter(
-					t -> t.getDate().equals(day)).findFirst();
+					t -> t.getDateAuthorization().equals(day)).findFirst();
 
 			if (lastTransactionOfDay.isPresent()) {
 				balance = lastTransactionOfDay.get().getBalance();

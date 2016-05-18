@@ -51,8 +51,6 @@ public class PendingAnalyzer {
             if (pendingConsolidated.isPresent()) {
                 // remove from allSyncTransactions
                 allSyncTransactions.remove(pendingConsolidated.get());
-            } else {
-
             }
         }
 

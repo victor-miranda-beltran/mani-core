@@ -41,7 +41,7 @@ CREATE TABLE transaction(
   date_settled DATETIME NOT NULL,
   date_processed DATETIME NOT NULL,
   flow VARCHAR(12),
-  status VARCHAR(12)
+  status VARCHAR(15)
 );
 
 

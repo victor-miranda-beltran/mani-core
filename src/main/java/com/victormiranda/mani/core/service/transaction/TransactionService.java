@@ -19,6 +19,8 @@ public interface TransactionService {
 
 	List <BankTransaction> processSettledTransactions(Integer bankAccountId, AccountInfo accountInfo);
 
+	List<BankTransaction> processPendingRemovedTransactions(Integer bankAccountId, AccountInfo accountInfo);
+
 	Transaction updateTransactionCategory(final Integer transactionId, Category category);
 
 	List<Transaction> reprocess();

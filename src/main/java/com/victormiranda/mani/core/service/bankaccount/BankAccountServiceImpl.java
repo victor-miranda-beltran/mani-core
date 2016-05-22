@@ -158,10 +158,13 @@ public class BankAccountServiceImpl implements BankAccountService {
             transactionService.processPendingTransactions(bankAccount.getId(), newPendingTransactions);
     bankAccount.getTransactions().addAll(newPendingBankTransactions);
 
-    pendingAnalyzer.fetchPendingPromotions(accountInfo, oldPendings, newPendingBankTransactions);
+    pendingAnalyzer.promotePendingTransactions(accountInfo, oldPendings);
 
     final List<BankTransaction> bankTransactions =
             transactionService.processSettledTransactions(bankAccount.getId(), accountInfo);
+
+    bankTransactions.addAll(transactionService.processPendingRemovedTransactions(bankAccount.getId(), accountInfo));
+
     bankAccount.getTransactions().addAll(bankTransactions);
 
     return bankAccountDao.save(bankAccount);

@@ -88,7 +88,22 @@ public class TransactionServiceImpl implements TransactionService {
 	public List<BankTransaction> processSettledTransactions(Integer bankAccountId, AccountInfo accountInfo) {
 		return accountInfo.getTransactions().stream()
 				.filter(t -> TransactionStatus.NORMAL == t.getStatus())
-				.filter(t -> !getTransaction(t).isPresent())
+				.filter(t -> {
+					Optional<BankTransaction> existent = getTransaction(t);
+					return !existent.isPresent() || existent.get().getTransactionStatus() == TransactionStatus.PENDING;
+				})
+				.map(t -> processTransaction(bankAccountId, t) )
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<BankTransaction> processPendingRemovedTransactions(Integer bankAccountId, AccountInfo accountInfo) {
+		return accountInfo.getTransactions().stream()
+				.filter(t -> TransactionStatus.PENDING_REMOVED == t.getStatus())
+				.filter(t -> {
+					Optional<BankTransaction> existent = getTransaction(t);
+					return !existent.isPresent() || existent.get().getTransactionStatus() == TransactionStatus.PENDING;
+				})
 				.map(t -> processTransaction(bankAccountId, t) )
 				.collect(Collectors.toList());
 	}

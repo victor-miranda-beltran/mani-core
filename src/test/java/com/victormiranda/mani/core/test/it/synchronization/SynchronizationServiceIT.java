@@ -3,12 +3,9 @@ package com.victormiranda.mani.core.test.it.synchronization;
 import com.victormiranda.mani.bean.AccountInfo;
 import com.victormiranda.mani.bean.SynchronizationResult;
 import com.victormiranda.mani.bean.Transaction;
-import com.victormiranda.mani.core.dao.bankaccount.BankAccountDao;
-import com.victormiranda.mani.core.dao.bankaccount.TransactionDao;
 import com.victormiranda.mani.core.model.BankAccount;
 import com.victormiranda.mani.core.model.BankLogin;
 import com.victormiranda.mani.core.service.bankaccount.BankAccountService;
-import com.victormiranda.mani.core.service.synchronization.SynchronizationService;
 import com.victormiranda.mani.core.service.transaction.TransactionService;
 import com.victormiranda.mani.core.test.it.BaseIT;
 import com.victormiranda.mani.core.test.it.ITApp;
@@ -43,17 +40,7 @@ public class SynchronizationServiceIT  extends BaseIT {
     private TransactionService transactionService;
 
     @Autowired
-    private TransactionDao transactionDao;
-
-    @Autowired
-    private BankAccountDao bankAccountDao;
-
-    @Autowired
     private BankAccountService bankAccountService;
-
-    @Autowired
-    private SynchronizationService synchronizationService;
-
 
     @Test
     public void testReadPendings() {
@@ -123,6 +110,33 @@ public class SynchronizationServiceIT  extends BaseIT {
                 transactionService.getPendingTransactionsFromBankAccount(1);
 
         //after this synchronization, the pending transaction should be removed
+        Assert.assertEquals(0, pendingBankTransactionsAfterFirstSync.size());
+    }
+
+    @Test
+    public void testSynchronizeWithExistingPendingPromoted() {
+        final List<Transaction> transactionsIncluded = new ArrayList<>();
+
+        transactionsIncluded.add(
+                new Transaction.Builder()
+                    .withAccount(getTestAccount())
+                        .withUid("transuid2")
+                        .withAmount(BigDecimal.TEN)
+                        .withStatus(TransactionStatus.NORMAL)
+                        .withDescription("POS Amazon.co.uk 01/12")
+                        .withDateAuthorization(LocalDate.of(2016,12,1))
+                        .build());
+
+        executeSync(transactionsIncluded);
+
+        final List<Transaction> pendingBankTransactionsAfterFirstSync =
+                transactionService.getPendingTransactionsFromBankAccount(1);
+
+        //after this synchronization, the pending transaction should be removed
+        Assert.assertEquals(0, pendingBankTransactionsAfterFirstSync.size());
+
+
+        //after this synchronization, the old pending should be a regular transaction
         Assert.assertEquals(0, pendingBankTransactionsAfterFirstSync.size());
     }
 

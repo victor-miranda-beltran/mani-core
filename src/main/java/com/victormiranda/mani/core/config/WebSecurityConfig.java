@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -45,6 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.addFilterBefore(tokenFilter, BasicAuthenticationFilter.class )
 				.csrf().disable()
 				.authorizeRequests()
+				.antMatchers(HttpMethod.OPTIONS,"/*").permitAll()//allow CORS option calls
 				.anyRequest().authenticated()
 				.antMatchers("/login").anonymous()
 				.antMatchers("/rest/protected/hello").hasRole("USER");

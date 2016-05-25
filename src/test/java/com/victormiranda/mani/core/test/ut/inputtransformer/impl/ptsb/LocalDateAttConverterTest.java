@@ -1,6 +1,6 @@
 package com.victormiranda.mani.core.test.ut.inputtransformer.impl.ptsb;
 
-import com.victormiranda.mani.core.LocalDateAttributeConverter;
+import com.victormiranda.mani.core.converter.LocalDateAttributeConverter;
 import org.junit.Assert;
 import org.junit.Test;
 

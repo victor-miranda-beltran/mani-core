@@ -7,6 +7,8 @@ import com.victormiranda.mani.type.TransactionStatus;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "transaction")
@@ -26,7 +28,7 @@ public class BankTransaction implements ManiModel {
 
 	private LocalDate dateSettled;
 
-	private LocalDate dateProcessed;
+	private LocalDateTime dateProcessed;
 
 	@ManyToOne
 	@JoinColumn(name = "category_id")
@@ -96,11 +98,11 @@ public class BankTransaction implements ManiModel {
 		this.dateSettled = dateProccesed;
 	}
 
-	public LocalDate getDateProcessed() {
+	public LocalDateTime getDateProcessed() {
 		return dateProcessed;
 	}
 
-	public void setDateProcessed(LocalDate dateProcessed) {
+	public void setDateProcessed(LocalDateTime dateProcessed) {
 		this.dateProcessed = dateProcessed;
 	}
 

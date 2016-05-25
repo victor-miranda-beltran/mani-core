@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -67,6 +69,7 @@ public class TransactionServiceImpl implements TransactionService {
 		newTransaction.setBalance(t.getBalance());
 		newTransaction.setDateAuthorization(t.getDateAuthorization());
 		newTransaction.setDateSettled(t.getDateSettled());
+		newTransaction.setDateProcessed(LocalDateTime.now());
 		newTransaction.setDescriptionOriginal(t.getDescription());
 		newTransaction.setDescriptionProcessed(t.getDescriptionProcessed());
 		newTransaction.setUid(t.getUid());

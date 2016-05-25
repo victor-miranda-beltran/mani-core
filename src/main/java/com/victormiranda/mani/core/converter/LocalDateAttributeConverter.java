@@ -1,4 +1,4 @@
-package com.victormiranda.mani.core;
+package com.victormiranda.mani.core.converter;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

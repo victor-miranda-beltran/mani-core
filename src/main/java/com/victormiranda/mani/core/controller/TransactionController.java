@@ -15,9 +15,6 @@ public class TransactionController {
 	private final TransactionService transactionService;
 
 	@Autowired
-	private TransactionTransformer transactionTransformer;
-
-	@Autowired
 	public TransactionController(TransactionService transactionService) {
 		this.transactionService = transactionService;
 	}
@@ -27,14 +24,14 @@ public class TransactionController {
 		return transactionService.getTransactions();
 	}
 
-	@RequestMapping("/refresh")
-	public List<Transaction> getTransactionsRedo() {
-		return transactionService.reprocess();
+	@RequestMapping(value = "/transactions/{transactionId}/category", method = RequestMethod.PUT)
+	public  List<Transaction> updateTransactionCategory(@PathVariable Integer transactionId, @RequestBody Category category) {
+		return transactionService.updateTransactionCategory(transactionId, category);
 	}
 
-	@RequestMapping(value = "/transactions/{transactionId}/category", method = RequestMethod.PUT)
-	public Transaction updateTransactionCategory(@PathVariable Integer transactionId, @RequestBody Category category) {
-		return transactionService.updateTransactionCategory(transactionId, category);
+	@RequestMapping(value = "/transactions/{transactionId}/category", method = RequestMethod.DELETE)
+	public  void deleteTransactionCategory(@PathVariable Integer transactionId) {
+		transactionService.deleteTransactionCategory(transactionId);
 	}
 
 

@@ -46,7 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.addFilterBefore(tokenFilter, BasicAuthenticationFilter.class )
 				.csrf().disable()
 				.authorizeRequests()
-				.antMatchers(HttpMethod.OPTIONS,"/*").permitAll()//allow CORS option calls
+				.antMatchers(HttpMethod.OPTIONS).permitAll()//allow CORS option calls
 				.anyRequest().authenticated()
 				.antMatchers("/login").anonymous()
 				.antMatchers("/rest/protected/hello").hasRole("USER");

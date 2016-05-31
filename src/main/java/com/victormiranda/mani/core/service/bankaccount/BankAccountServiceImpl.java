@@ -10,6 +10,7 @@ import com.victormiranda.mani.core.model.BankAccount;
 import com.victormiranda.mani.core.model.BankLogin;
 import com.victormiranda.mani.core.model.BankTransaction;
 import com.victormiranda.mani.core.model.User;
+import com.victormiranda.mani.core.service.synchronization.SyncBatch;
 import com.victormiranda.mani.core.service.transaction.PendingAnalyzer;
 import com.victormiranda.mani.core.service.transaction.TransactionService;
 import com.victormiranda.mani.core.service.user.UserService;
@@ -53,7 +54,9 @@ public class BankAccountServiceImpl implements BankAccountService {
   public List<BankAccount> syncBankAccounts(final BankLogin bankLogin, final SynchronizationResult synchronizationResult) {
     List<BankAccount> bankAccountsProcessed = new ArrayList<>();
     for (AccountInfo accountInfo : synchronizationResult.getAccounts()) {
-      bankAccountsProcessed.add(syncBankAccount(bankLogin, accountInfo));
+      final BankAccount bankAccount = getOrCreate(bankLogin, accountInfo);
+
+      bankAccountsProcessed.add(syncBankAccount(bankAccount, accountInfo));
     }
 
     return bankAccountsProcessed;
@@ -148,22 +151,17 @@ public class BankAccountServiceImpl implements BankAccountService {
     return accountInfo;
   }
 
-  private BankAccount syncBankAccount(final BankLogin bankLogin, final AccountInfo accountInfo) {
-    final BankAccount bankAccount = getOrCreate(bankLogin, accountInfo);
+  private BankAccount syncBankAccount(final BankAccount bankAccount, final AccountInfo accountInfoSync) {
 
-    final List<Transaction> oldPendings = transactionService.getPendingTransactionsFromBankAccount(bankAccount.getId());
-    final List<Transaction> newPendingTransactions = pendingAnalyzer.getPendingsToStore(accountInfo, oldPendings);
+    final AccountInfo accountInfo = new AccountInfo.Builder(accountInfoSync).withId(bankAccount.getId()).build();
 
-    final List<BankTransaction> newPendingBankTransactions =
-            transactionService.processPendingTransactions(bankAccount.getId(), newPendingTransactions);
-    bankAccount.getTransactions().addAll(newPendingBankTransactions);
+    final List<Transaction> knownPendingTransactions =
+            transactionService.getPendingTransactionsFromBankAccount(accountInfo.getId());
 
-    pendingAnalyzer.promotePendingTransactions(accountInfo, oldPendings);
+    final List<Transaction> settledTransactions = transactionService.getSettledTransactions(accountInfo);
+    final SyncBatch batch = pendingAnalyzer.processSyncAccountResult(accountInfo, knownPendingTransactions, settledTransactions);
 
-    final List<BankTransaction> bankTransactions =
-            transactionService.processSettledTransactions(bankAccount.getId(), accountInfo);
-
-    bankTransactions.addAll(transactionService.processPendingRemovedTransactions(bankAccount.getId(), accountInfo));
+    final Set<BankTransaction> bankTransactions = transactionService.processBatch(batch);
 
     bankAccount.getTransactions().addAll(bankTransactions);
 

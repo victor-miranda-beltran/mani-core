@@ -36,7 +36,7 @@ CREATE TABLE transaction(
   description_processed VARCHAR(255),
   description_display VARCHAR(255),
   amount DECIMAL(10,2) NOT NULL,
-  balance DECIMAL(10,2) NOT NULL,
+  balance DECIMAL(10,2),
   date_authorization DATETIME NOT NULL,
   date_settled DATETIME NOT NULL,
   date_processed DATETIME NOT NULL,

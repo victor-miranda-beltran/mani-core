@@ -4,8 +4,10 @@ import com.victormiranda.mani.bean.AccountInfo;
 import com.victormiranda.mani.bean.Transaction;
 import com.victormiranda.mani.bean.category.Category;
 import com.victormiranda.mani.core.model.BankTransaction;
+import com.victormiranda.mani.core.service.synchronization.SyncBatch;
 
 import java.util.List;
+import java.util.Set;
 
 public interface TransactionService {
 
@@ -15,13 +17,11 @@ public interface TransactionService {
 
 	BankTransaction processTransaction(Integer bankAccountId, Transaction t);
 
-	List<BankTransaction> processPendingTransactions(Integer bankAccountId, List<Transaction> newPendings);
+	Set<BankTransaction> processBatch(final SyncBatch syncBatch);
 
-	List <BankTransaction> processSettledTransactions(Integer bankAccountId, AccountInfo accountInfo);
+	List<Transaction> updateTransactionCategory(final Integer transactionId, Category category);
 
-	List<BankTransaction> processPendingRemovedTransactions(Integer bankAccountId, AccountInfo accountInfo);
+	void deleteTransactionCategory(final Integer transactionId);
 
-	Transaction updateTransactionCategory(final Integer transactionId, Category category);
-
-	List<Transaction> reprocess();
+	List<Transaction> getSettledTransactions(AccountInfo accountInfo);
 }

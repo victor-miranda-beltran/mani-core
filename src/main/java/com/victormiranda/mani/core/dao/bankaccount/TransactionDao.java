@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface TransactionDao extends CrudRepository<BankTransaction, Integer> {
@@ -19,4 +20,9 @@ public interface TransactionDao extends CrudRepository<BankTransaction, Integer>
 
 	@Query("select t from BankTransaction t where t.bankAccount.id = ?1 AND t.transactionStatus = 'PENDING'")
 	List<BankTransaction> getPendingBankTransactionsByAccount(Integer bankAccountId);
+
+	@Query("select t from " +
+			"BankTransaction t " +
+			"	WHERE  t.category IS NULL AND t.bankAccount.bankLogin.user.id = ?2 AND t.descriptionProcessed = ?1")
+	Set<BankTransaction> findSimilarTransactionsWithoutCategory(String descriptionProcessed, final Integer userId);
 }

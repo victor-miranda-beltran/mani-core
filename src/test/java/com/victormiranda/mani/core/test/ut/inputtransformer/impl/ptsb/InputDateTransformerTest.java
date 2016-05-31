@@ -27,7 +27,7 @@ public class InputDateTransformerTest {
                 .withUid("ozu")
                 .withDateSettled(LocalDate.now())
                 .withDescription("Random")
-                .withAccount(new BaseAccountInfo(1,"demo", "123"))
+                .withAccount(new BaseAccountInfo(1,"demo","demo", "123"))
                 .build();
 
         final Transaction transformedTransaction = inputDateTransformer.transform(transaction);
@@ -42,7 +42,7 @@ public class InputDateTransformerTest {
                 .withUid("ozu")
                 .withDateSettled(LocalDate.now())
                 .withDescription("")
-                .withAccount(new BaseAccountInfo(1,"demo", "123"))
+                .withAccount(new BaseAccountInfo(1,"demo", "demo", "123"))
                 .build();
 
         Transaction transformedTransaction = inputDateTransformer.transform(transaction);
@@ -56,7 +56,7 @@ public class InputDateTransformerTest {
         final Transaction transaction = new Transaction.Builder()
                 .withUid("ozu")
                 .withDateSettled(LocalDate.now())
-                .withAccount(new BaseAccountInfo(1,"demo", "123"))
+                .withAccount(new BaseAccountInfo(1,"demo", "demo", "123"))
                 .withDescription("Random 19/19")
                 .build();
 
@@ -71,7 +71,7 @@ public class InputDateTransformerTest {
 
         final Transaction transaction = new Transaction.Builder()
                 .withUid("ozu")
-                .withAccount(new BaseAccountInfo(1,"demo", "123"))
+                .withAccount(new BaseAccountInfo(1,"demo", "demo", "123"))
                 .withDateSettled(LocalDate.now())
                 .withDescription("Random " + formatter.format(oneMonthAgo))
                 .build();
@@ -89,7 +89,7 @@ public class InputDateTransformerTest {
                 .withUid("ozu")
                 .withDateSettled(LocalDate.now())
                 .withDescription(formatter.format(threeDaysAgo))
-                .withAccount(new BaseAccountInfo(1,"demo", "123"))
+                .withAccount(new BaseAccountInfo(1,"demo", "demo", "123"))
                 .build();
 
         final Transaction transformedTransaction = inputDateTransformer.transform(transaction);
@@ -104,7 +104,7 @@ public class InputDateTransformerTest {
         final Transaction transaction = new Transaction.Builder()
                 .withUid("ozu")
                 .withDateSettled(LocalDate.now())
-                .withAccount(new BaseAccountInfo(1,"demo", "123"))
+                .withAccount(new BaseAccountInfo(1,"demo", "demo", "123"))
                 .withDescription(formatter.format(threeDaysInTheFuture))
                 .build();
 

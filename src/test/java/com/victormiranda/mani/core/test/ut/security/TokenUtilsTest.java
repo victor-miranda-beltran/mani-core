@@ -15,8 +15,8 @@ public class TokenUtilsTest {
 
         user.setId(1);
         user.setName("victor");
-
     }
+
     @Test
     public void testCreateToken() {
         final String token = TokenUtils.createToken(user);

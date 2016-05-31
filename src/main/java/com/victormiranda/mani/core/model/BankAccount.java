@@ -4,6 +4,7 @@ package com.victormiranda.mani.core.model;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,7 +29,7 @@ public class BankAccount implements ManiModel {
 	private LocalDate lastSynced;
 
 	@OneToMany(mappedBy = "bankAccount")
-	private List<BankTransaction> transactions;
+	private List<BankTransaction> transactions = new ArrayList<>();
 
 	public Integer getId() {
 		return id;

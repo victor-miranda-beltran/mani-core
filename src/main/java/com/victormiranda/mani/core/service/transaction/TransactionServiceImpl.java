@@ -10,16 +10,17 @@ import com.victormiranda.mani.core.model.BankAccount;
 import com.victormiranda.mani.core.model.BankTransaction;
 import com.victormiranda.mani.core.model.TransactionCategory;
 import com.victormiranda.mani.core.service.category.CategoryService;
+import com.victormiranda.mani.core.service.synchronization.SyncBatch;
 import com.victormiranda.mani.core.service.user.UserService;
 import com.victormiranda.mani.type.TransactionStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -81,52 +82,55 @@ public class TransactionServiceImpl implements TransactionService {
 	}
 
 	@Override
-	public List<BankTransaction> processPendingTransactions(Integer bankAccountId, List<Transaction> newPendings) {
-		return newPendings.stream()
-				.map(t -> processTransaction(bankAccountId, t) )
-				.collect(Collectors.toList());
+	public Set<BankTransaction> processBatch(SyncBatch syncBatch) {
+		final Set<BankTransaction> processedTransactions = new HashSet<>();
+
+		for (Transaction transaction : syncBatch.getNewTransactions()) {
+			processedTransactions.add(processTransaction(syncBatch.getAccountId(), transaction));
+		}
+
+		for (Transaction transaction : syncBatch.getUpdatedTransactions()) {
+			processedTransactions.add(processTransaction(syncBatch.getAccountId(), transaction));
+		}
+
+		for (Transaction transaction : syncBatch.getDeletedTransactions()) {
+			BankTransaction transactionToDelete = transactionDao.findOne(transaction.getId().get());
+			transactionDao.delete(transactionToDelete);
+		}
+
+		return processedTransactions;
 	}
 
 	@Override
-	public List<BankTransaction> processSettledTransactions(Integer bankAccountId, AccountInfo accountInfo) {
-		return accountInfo.getTransactions().stream()
-				.filter(t -> TransactionStatus.NORMAL == t.getStatus())
-				.filter(t -> {
-					Optional<BankTransaction> existent = getTransaction(t);
-					return !existent.isPresent() || existent.get().getTransactionStatus() == TransactionStatus.PENDING;
-				})
-				.map(t -> processTransaction(bankAccountId, t) )
-				.collect(Collectors.toList());
+	public  List<Transaction> updateTransactionCategory(final Integer transactionId, final Category category) {
+		final List<Transaction> modifiedTransactions = new ArrayList<>();
+		final BankTransaction paramTransaction = transactionDao.findOne(transactionId);
+		final Set<BankTransaction> similarTransactions =
+				transactionDao.findSimilarTransactionsWithoutCategory(
+						paramTransaction.getDescriptionProcessed(), userService.getCurrentUserId().get());
+
+		for (BankTransaction bankTransaction : similarTransactions) {
+			final TransactionCategory transactionCategory = new TransactionCategory();
+
+			transactionCategory.setId(category.getId());
+			transactionCategory.setName(category.getName());
+			transactionCategory.setFlow(category.getFlow());
+
+			bankTransaction.setCategory(transactionCategory);
+
+			transactionDao.save(bankTransaction);
+
+			modifiedTransactions.add(toTransaction(bankTransaction));
+		}
+
+		return modifiedTransactions;
 	}
 
-	@Override
-	public List<BankTransaction> processPendingRemovedTransactions(Integer bankAccountId, AccountInfo accountInfo) {
-		return accountInfo.getTransactions().stream()
-				.filter(t -> TransactionStatus.PENDING_REMOVED == t.getStatus())
-				.filter(t -> {
-					Optional<BankTransaction> existent = getTransaction(t);
-					return !existent.isPresent() || existent.get().getTransactionStatus() == TransactionStatus.PENDING;
-				})
-				.map(t -> processTransaction(bankAccountId, t) )
-				.collect(Collectors.toList());
-	}
+	public void deleteTransactionCategory(final Integer transactionId) {
+		final BankTransaction paramTransaction = transactionDao.findOne(transactionId);
 
-	@Override
-	public Transaction updateTransactionCategory(final Integer transactionId, final Category category) {
-
-		final BankTransaction bankTransaction = transactionDao.findOne(transactionId);
-		final Transaction originalTransaction = toTransaction(bankTransaction);
-		final TransactionCategory transactionCategory = new TransactionCategory();
-
-		transactionCategory.setId(category.getId());
-		transactionCategory.setName(category.getName());
-		transactionCategory.setFlow(category.getFlow());
-
-		bankTransaction.setCategory(transactionCategory);
-
-		transactionDao.save(bankTransaction);
-
-		return new Transaction.Builder(originalTransaction).withCategory(Optional.of(category)).build();
+		paramTransaction.setCategory(null);
+		transactionDao.save(paramTransaction);
 	}
 
 	private Transaction toTransaction(BankTransaction tm) {
@@ -158,17 +162,19 @@ public class TransactionServiceImpl implements TransactionService {
 	}
 
 	@Override
-	public List<Transaction> reprocess() {
-		List<Transaction> transactions = getTransactions().stream()
+	public List<Transaction> getSettledTransactions(AccountInfo accountInfo) {
+		final Integer userId = userService.getCurrentUserId().get();
+
+		//very poor implementation, WIP
+		final List<Transaction> transactions = accountInfo.getTransactions().stream()
+				.filter(t -> t.getStatus() == TransactionStatus.NORMAL)
+				.map(t -> transactionDao.findByUserAndUID(userId, t.getUid()))
+				.filter(t -> t.isPresent())
+				.map(t -> toTransaction(t.get()))
 				.collect(Collectors.toList());
 
-		List<Transaction> reprocessed = transactions.stream()
-				.map(transaction -> {
-					return toTransaction(processTransaction(transaction.getAccount().getId(), transaction));
-				})
-				.collect(Collectors.toList());
-
-		return reprocessed;
+		return transactions;
 	}
+
 
 }

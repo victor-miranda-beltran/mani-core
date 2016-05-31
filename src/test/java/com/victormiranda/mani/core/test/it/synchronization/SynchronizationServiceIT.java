@@ -9,6 +9,7 @@ import com.victormiranda.mani.core.service.bankaccount.BankAccountService;
 import com.victormiranda.mani.core.service.transaction.TransactionService;
 import com.victormiranda.mani.core.test.it.BaseIT;
 import com.victormiranda.mani.core.test.it.ITApp;
+import com.victormiranda.mani.type.TransactionFlow;
 import com.victormiranda.mani.type.TransactionStatus;
 import org.junit.Assert;
 import org.junit.Test;
@@ -23,10 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles("test")
@@ -65,7 +63,19 @@ public class SynchronizationServiceIT  extends BaseIT {
                 .withStatus(TransactionStatus.PENDING)
                 .build();
 
+        final Transaction oldPendingTransactionThatStillExists = new Transaction.Builder()
+                .withAccount(testAccount)
+                .withId(Optional.of(2))
+                .withUid("transuid2")
+                .withDescription("POS Amazon.co.uk 01/12")
+                .withFlow(TransactionFlow.OUT)
+                .withAmount(BigDecimal.TEN)
+                .withDateAuthorization(LocalDate.of(2016,12,1))
+                .withStatus(TransactionStatus.PENDING)
+                .build();
+
         transactionsIncluded.add(newPendingTransaction);
+        transactionsIncluded.add(oldPendingTransactionThatStillExists);
 
         executeSync(transactionsIncluded);
 

@@ -85,11 +85,21 @@ public class BankAccountServiceImpl implements BankAccountService {
   }
 
   @Override
-  public Map<LocalDate, BigDecimal> getAccountBalanceInTime(final AccountInfo accountInfo) {
-    final Map<LocalDate, BigDecimal> evolution = new LinkedHashMap<>();
+  public Set<BalanceEvolution> getAccountsBalanceEvolution() {
+    return getAccountsInfo().stream()
+            .map(a -> getAccountBalance(a))
+            .collect(Collectors.toSet());
+  }
+
+  private BalanceEvolution getAccountBalance(final AccountInfo accountInfo) {
+    final LinkedHashMap<LocalDate, BigDecimal> evolution = new LinkedHashMap<>();
     final BankAccount bankAccount = bankAccountDao.findOne(accountInfo.getId());
 
     List<BankTransaction> transactions = bankAccount.getTransactions();
+
+    if (transactions.isEmpty()) {
+      return new BalanceEvolution(accountInfo, evolution);
+    }
 
     final Comparator<BankTransaction> comp = (o1, o2) -> o1.getDateAuthorization().compareTo(o2.getDateAuthorization());
 
@@ -111,7 +121,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     }
 
-    return evolution;
+    return new BalanceEvolution(accountInfo, evolution);
   }
 
   @Override
@@ -141,6 +151,7 @@ public class BankAccountServiceImpl implements BankAccountService {
     final AccountInfo accountInfo = new AccountInfo.Builder()
             .withId(bankAccount.getId())
             .withName(bankAccount.getName())
+            .withAlias(bankAccount.getAlias())
             .withAccountNumber(bankAccount.getAccountNumber())
             .withUid(bankAccount.getUuid())
             .withAvailableBalance(bankAccount.getAvailableBalance())

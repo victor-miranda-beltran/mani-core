@@ -5,6 +5,7 @@ import com.victormiranda.mani.bean.Transaction;
 import com.victormiranda.mani.bean.category.Category;
 import com.victormiranda.mani.core.dao.bankaccount.BankAccountDao;
 import com.victormiranda.mani.core.dao.bankaccount.TransactionDao;
+import com.victormiranda.mani.core.dao.bankaccount.TransactionSpecification;
 import com.victormiranda.mani.core.inputtransformer.impl.ptsb.PTSBInputTransformer;
 import com.victormiranda.mani.core.model.BankAccount;
 import com.victormiranda.mani.core.model.BankTransaction;
@@ -15,11 +16,10 @@ import com.victormiranda.mani.core.service.user.UserService;
 import com.victormiranda.mani.type.TransactionStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -174,6 +174,20 @@ public class TransactionServiceImpl implements TransactionService {
 				.collect(Collectors.toList());
 
 		return transactions;
+	}
+
+	@Override
+	public Map<Category, BigDecimal> getTransactionAggregation(final TransactionFilter transactionFilter) {
+		final List<BankTransaction> bankTransactions =
+				transactionDao.findAll(new TransactionSpecification(transactionFilter));
+
+		Map<Category, BigDecimal> res = bankTransactions.stream()
+				.map(this::toTransaction)
+				.collect(Collectors.groupingBy(t -> t.getCategory().orElse(new Category(null, "Uncategorized", t.getFlow(), Optional.empty())),
+						Collectors.mapping(Transaction::getAmount,
+								Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))));
+
+		return res;
 	}
 
 

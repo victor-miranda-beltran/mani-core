@@ -3,8 +3,7 @@ package com.victormiranda.mani.core.controller;
 import com.victormiranda.mani.bean.SynchronizationResult;
 import com.victormiranda.mani.core.service.synchronization.SynchronizationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class SynchronizationController {
@@ -16,9 +15,8 @@ public class SynchronizationController {
 		this.synchronizationService = synchronizationService;
 	}
 
-	@RequestMapping("/sync")
-	public SynchronizationResult sync() {
-		final Integer bankLoginId = 1;
+	@RequestMapping(value = "/sync/{bankLoginId}", method = RequestMethod.POST)
+	public SynchronizationResult sync(@PathVariable final Integer bankLoginId) {
 		return synchronizationService.sync(bankLoginId);
 	}
 

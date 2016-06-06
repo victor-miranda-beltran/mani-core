@@ -1,6 +1,7 @@
 package com.victormiranda.mani.core.dao.bankaccount;
 
 import com.victormiranda.mani.core.model.BankTransaction;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -10,9 +11,9 @@ import java.util.Optional;
 import java.util.Set;
 
 @Repository
-public interface TransactionDao extends CrudRepository<BankTransaction, Integer> {
+public interface TransactionDao extends CrudRepository<BankTransaction, Integer>, JpaSpecificationExecutor {
 
-	@Query("select t from BankTransaction t where t.bankAccount.bankLogin.user.id = ?1")
+	@Query("select t from BankTransaction t where t.bankAccount.bankLogin.user.id = ?1 order by t.dateAuthorization desc")
 	List<BankTransaction> getTransactions(final Integer userId);
 
 	@Query("select t from BankTransaction t where t.uid = ?2 and t.uid != '' and t.bankAccount.bankLogin.user.id = ?1")

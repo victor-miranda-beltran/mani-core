@@ -24,7 +24,7 @@ public interface BankAccountService {
 
 	Set<AccountInfo> getAccountsInfoByUserId(Integer userId);
 
-	Map<LocalDate, BigDecimal> getAccountBalanceInTime(AccountInfo accountInfo);
+	Set<BalanceEvolution> getAccountsBalanceEvolution();
 
 	AccountInfo getAccountById(int id);
 }

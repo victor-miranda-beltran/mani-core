@@ -3,6 +3,7 @@ package com.victormiranda.mani.core.controller;
 import com.victormiranda.mani.bean.AccountInfo;
 import com.victormiranda.mani.bean.Transaction;
 import com.victormiranda.mani.bean.category.Category;
+import com.victormiranda.mani.core.service.bankaccount.BalanceEvolution;
 import com.victormiranda.mani.core.service.bankaccount.BankAccountService;
 import com.victormiranda.mani.core.service.transaction.TransactionService;
 import com.victormiranda.mani.core.service.transaction.TransactionTransformer;
@@ -13,6 +14,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 public class BankAccountController {
@@ -28,8 +30,8 @@ public class BankAccountController {
 	}
 
 	@RequestMapping("/balanceEvolution")
-	public Map<LocalDate, BigDecimal> getBalanceEvolution() {
-		return bankAccountService.getAccountBalanceInTime(new AccountInfo.Builder().withId(4).build());
+	public Set<BalanceEvolution> getBalanceEvolution() {
+		return bankAccountService.getAccountsBalanceEvolution();
 	}
 
 

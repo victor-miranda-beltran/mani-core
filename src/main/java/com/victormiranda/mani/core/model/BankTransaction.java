@@ -8,7 +8,6 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Entity
 @Table(name = "transaction")
@@ -19,6 +18,8 @@ public class BankTransaction implements ManiModel {
 	private Integer id;
 
 	private String uid;
+
+	private String note;
 
 	private String descriptionOriginal;
 
@@ -64,6 +65,14 @@ public class BankTransaction implements ManiModel {
 
 	public void setUid(String uid) {
 		this.uid = uid;
+	}
+
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
 	}
 
 	public String getDescriptionOriginal() {

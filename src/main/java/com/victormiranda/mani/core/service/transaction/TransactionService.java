@@ -28,4 +28,6 @@ public interface TransactionService {
 	List<Transaction> getSettledTransactions(AccountInfo accountInfo);
 
 	Map<Category, BigDecimal> getTransactionAggregation(TransactionFilter transactionFilter);
+
+	void updateNote(Integer transactionId, String note);
 }

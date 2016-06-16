@@ -133,6 +133,14 @@ public class TransactionServiceImpl implements TransactionService {
 		transactionDao.save(paramTransaction);
 	}
 
+	@Override
+	public  void updateNote(final Integer transactionId, final String note) {
+		final BankTransaction paramTransaction = transactionDao.findOne(transactionId);
+		paramTransaction.setNote(note);
+
+		transactionDao.save(paramTransaction);
+	}
+
 	private Transaction toTransaction(BankTransaction tm) {
 		final BankAccount bankAccount = tm.getBankAccount();
 
@@ -153,6 +161,7 @@ public class TransactionServiceImpl implements TransactionService {
 				.withUid(tm.getUid())
 				.withDescription(tm.getDescriptionOriginal())
 				.withDescriptionProcessed(tm.getDescriptionProcessed())
+				.withNote(tm.getNote())
 				.withDateAuthorization(tm.getDateAuthorization())
 				.withDateSettled(tm.getDateSettled())
 				.withAmount(tm.getAmount())

@@ -33,6 +33,11 @@ public class TransactionController {
 		return transactionService.updateTransactionCategory(transactionId, category);
 	}
 
+	@RequestMapping(value = "/transactions/{transactionId}/note", method = RequestMethod.PUT)
+	public  void updateTransactionCategory(@PathVariable Integer transactionId, @RequestBody String note) {
+		transactionService.updateNote(transactionId, note);
+	}
+
 	@RequestMapping(value = "/transactions/{transactionId}/category", method = RequestMethod.DELETE)
 	public  void deleteTransactionCategory(@PathVariable Integer transactionId) {
 		transactionService.deleteTransactionCategory(transactionId);
